@@ -1,0 +1,25 @@
+.panel {
+    --title-background: rgb(148, 148, 148);
+    --content-background:rgb(78, 78, 78);
+    --width: fit-content;
+    --padding: 0.5em;
+
+    width: -moz-fit-content;
+    width: fit-content;
+}
+
+.panel-title {
+    border-top-right-radius: 1em;
+    border-top-left-radius: 1em;
+    background: var(--title-background);
+    text-align: center;
+    align-content: center;
+    padding: var(--padding);
+}
+
+.panel-content {
+    background: var(--content-background);
+    border-bottom-right-radius: 1em;
+    border-bottom-left-radius: 1em;
+    padding: var(--padding);
+}
