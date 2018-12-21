@@ -1,11 +1,43 @@
 /* FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- */
 
 .floating-input {
+    --label-transition-time: 0.1s;
+    --label-normal-color: grey;
+    --label-focus-color: blue;
+    --background: transparent;
+    --font-size: 1em;
 
+    padding: 0.2em;
+    font-size: var(--font-size);
+    position: relative;
+}
+
+.floating-input input {
+    line-height: 1.5em;
+    font-size: 1em;
+    background: var(--background);
+    border: none;
 }
 
 .floating-input-label {
     position: absolute;
+    top: 0;
+    margin-top: 0.5em;
+    margin-left: 0.1em;
+    color: var(--label-normal-color);
+    transition: linear var(--label-transition-time);
+}
+
+.floating-input input:focus + .floating-input-label {
+    position: absolute;
+    color: var(--label-focus-color);
+}
+
+.floating-input-label-float {
+    position: absolute;
+    transform-origin: 0;
+    font-size: 0.5em;
+    transition: linear var(--label-transition-time);
 }
 
 /* FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- FLOATING LABEL -- */

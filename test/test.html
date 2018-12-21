@@ -2,6 +2,10 @@
     <head>
         <link rel="stylesheet" type="text/css" href="../UXkit.css" />
         <!-- <link rel="stylesheet" type="text/css" href="../UXkit-grids.css" /> -->
+
+        <script type="text/javascript" src="../components/UXkit-inputs.js" />
+        </script>
+
     </head>
     <body>
         test2
@@ -29,14 +33,22 @@
                     </div>
                     <div class="panel-content">
                         content
+                        <div class="floating-input">
+                            <input id="username" type="text" />
+                            <div for="username" class="floating-input-label">
+                                label
+                            </div>
+                        </div>
                     </div>
                 </div>
 
+                <br>
+
                 <div class="floating-input">
-                    <div class="floating-input-label">
+                    <input id="system" type="text" />
+                    <div for="system" class="floating-input-label">
                         label
                     </div>
-                    <input type="text" />
                 </div>
 
             </div>

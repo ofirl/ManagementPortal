@@ -1,3 +1,7 @@
 @import url("UXkit-grids.css");
 @import url("components/UXkit-panels.css");
 @import url("components/UXkit-inputs.css");
+
+body {
+    font-size: 1.5em;
+}

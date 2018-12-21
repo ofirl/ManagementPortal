@@ -3,17 +3,20 @@ function UXkitInitInputs() {
     for (let i = 0; i < floatingInputs.length; i++) {
         const input = floatingInputs[i];
         
-        input.addEventListener("change", function (e) {
-
-        });
-        input.addEventListener("keydown", function (e) {
-
+        // input.addEventListener("change", function (e) {
+        //     checkFloatingInput(e.target);
+        // });
+        input.addEventListener("input", function (e) {
+            checkFloatingInput(e.target);
         });
     }
 }
 
-function checkFloatingInput() {
-    
+function checkFloatingInput(inputElement) {
+    if (inputElement.value != "")
+        document.querySelector("[for='" + inputElement.id + "'").classList.add("floating-input-label-float");
+    else
+        document.querySelector("[for='" + inputElement.id + "'").classList.remove("floating-input-label-float");
 }
 
-UXkitInitInputs();
+window.addEventListener("load", UXkitInitInputs);
