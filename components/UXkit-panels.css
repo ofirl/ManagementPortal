@@ -1,3 +1,5 @@
+/* BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- */
+
 .panel {
     --title-background: rgb(148, 148, 148);
     --content-background:rgb(78, 78, 78);
@@ -23,3 +25,5 @@
     border-bottom-left-radius: 1em;
     padding: var(--padding);
 }
+
+/* BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- BASIC PANEL -- */
