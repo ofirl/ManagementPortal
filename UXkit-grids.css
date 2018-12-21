@@ -1,0 +1,59 @@
+/* MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID */
+
+[class*="menu-grid"] {
+    --menu-fraction: 0.3fr;
+    --header-fraction: 0.1fr;
+}
+
+.main-grid {
+    height: 100%;
+    width: 100%;
+}
+
+.left-menu-grid {
+    display: grid;
+    grid-template-columns: var(--menu-fraction) 1fr;
+    grid-template-rows: 1fr;
+}
+
+.right-menu-grid {
+    display: grid;
+    grid-template-columns: 1fr var(--menu-fraction);
+    grid-template-rows: 1fr;
+}
+
+.left-menu-grid-header {
+    display: grid;
+    grid-template-columns: [header-start menu-start] var(--menu-fraction) [menu-end content-start] 1fr [content-end header-end];
+    grid-template-rows: [header-start] var(--header-fraction) [header-end menu-start content-start] 1fr [menu-end content-end];
+}
+
+.right-menu-grid-header {
+    display: grid;
+    grid-template-columns: [header-start content-start] 1fr [content-end menu-start] var(--menu-fraction) [menu-end header-end];
+    grid-template-rows: [header-start] var(--header-fraction) [header-end menu-start content-start] 1fr [menu-end content-end];
+}
+
+.grid-header {
+    grid-area: header;
+    text-align: center;
+    align-content: center;
+}
+
+.grid-menu {
+    grid-area: menu;
+}
+
+.grid-content {
+    grid-area: content;
+}
+
+[class*="left-menu-grid"] .grid-menu {
+    text-align: left;
+}
+
+[class*="right-menu-grid"] .grid-menu {
+    text-align: right;
+}
+
+/* MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID -- MAIN GRID */
