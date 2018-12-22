@@ -19,6 +19,10 @@
     border: none;
 }
 
+.floating-input input:focus {
+    outline: none;
+}
+
 .floating-input-label {
     position: absolute;
     top: 0;
