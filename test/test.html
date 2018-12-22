@@ -1,10 +1,11 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="../UXkit.css" />
+        <script type="text/javascript" src="../UXkit.js"> </script>
         <!-- <link rel="stylesheet" type="text/css" href="../UXkit-grids.css" /> -->
 
-        <script type="text/javascript" src="../components/UXkit-inputs.js" />
-        </script>
+        <script type="text/javascript" src="../components/UXkit-inputs.js"> </script>
+        <script type="text/javascript" src="../components/UXkit-menus.js"> </script>
 
     </head>
     <body>
@@ -15,6 +16,27 @@
             </div>
             <div class="grid-menu">
                 menu
+                <div class="moving-menu">
+                    <ul class="moving-menu-active">
+                        <li>
+                            <div class="moving-menu-label">
+                                menu item 1
+                            </div>
+                            <ul class="moving-menu-inactive">
+                                <li>
+                                    <div class="moving-menu-label">
+                                        menu sub item 1
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <div class="moving-menu-label">
+                                menu item 2
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="grid-content">
                 content <br />

@@ -8,9 +8,9 @@ function UXkitInitInputs() {
 }
 
 function checkFloatingInput(target) {
-    if (target.tagName != inputTagName)
+    if (!target.checkElementTag(inputTagName))
         return;
-    if (!target.parentElement.classList.contains(floatingInputClassName))
+    if (!target.checkElementParentClass(floatingInputClassName))
         return;
 
     if (target.value != "")

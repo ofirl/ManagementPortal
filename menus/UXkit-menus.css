@@ -1,0 +1,48 @@
+/* MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- */
+
+.moving-menu {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.moving-menu ul {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.moving-menu li {
+    position: relative;
+}
+
+@keyframes moving-menu-entry {
+    0% {
+        left: 50vw;
+    }
+    100% {
+        left: 0;
+    }
+}
+
+@keyframes moving-menu-exit {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: 50vw;
+    }
+}
+
+.moving-menu ul.moving-menu-active > li {
+    animation: moving-menu-entry 1s forwards;
+}
+
+.moving-menu ul.moving-menu-inactive > li {
+    animation: moving-menu-exit 1s forwards;
+}
+
+/* MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- */
