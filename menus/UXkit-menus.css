@@ -1,6 +1,8 @@
 /* MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- */
 
 .moving-menu {
+    --animation-time: 1s;
+
     position: relative;
     width: 100%;
     height: 100%;
@@ -19,11 +21,17 @@
     position: relative;
 }
 
+.moving-menu-label {
+    z-index: 10;
+}
+
 @keyframes moving-menu-entry {
     0% {
-        left: 50vw;
+        /* display: flex; */
+        left: 33vw;
     }
     100% {
+        /* display: flex; */
         left: 0;
     }
 }
@@ -31,18 +39,41 @@
 @keyframes moving-menu-exit {
     0% {
         left: 0;
+        /* display: flex; */
     }
     100% {
-        left: 50vw;
+        left: 33vw;
+        /* display: none; */
     }
+}
+
+.moving-menu ul.moving-menu-inactive {
+    left: 50vw;
+    transition-delay: calc(var(--animation-time) + var(--animation-delay));
 }
 
 .moving-menu ul.moving-menu-active > li {
-    animation: moving-menu-entry 1s forwards;
+    animation: moving-menu-entry var(--animation-time) var(--animation-delay) forwards;
 }
 
 .moving-menu ul.moving-menu-inactive > li {
-    animation: moving-menu-exit 1s forwards;
+    animation: moving-menu-exit var(--animation-time) var(--animation-delay) forwards;
+}
+
+.moving-menu ul > li:nth-child(1) {
+    --animation-delay: 0.1s;
+}
+
+.moving-menu ul > li:nth-child(2) {
+    --animation-delay: 0.2s;
+}
+
+.moving-menu ul > li:nth-child(3) {
+    --animation-delay: 0.3s;
+}
+
+.moving-menu ul > li:nth-child(4) {
+    --animation-delay: 0.4s;
 }
 
 /* MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- MOVING MENU -- */
