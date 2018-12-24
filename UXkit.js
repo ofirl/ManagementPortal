@@ -1,3 +1,33 @@
+/* General Helping Functions -- General Helping Functions -- General Helping Functions -- General Helping Functions -- General Helping Functions */
+
+/**
+ * Toggles a class on a DOM element
+ * @param {Element} element 
+ * @param {String} className 
+ */
+function toggleElementClass(element, className) {
+    element.toggleClass();
+    if (element.classList.contains(className))
+        element.classList.remove(className);
+    else
+        element.classList.add(className);
+}
+
+/**
+ * Toggles a class on a DOM element
+ * @param {String} className 
+ * @memberof Element
+ * @method
+ * @name Element#toggleClass
+ */
+Element.prototype.toggleClass = function (className) {
+    return toggleElementClass(this, className);
+};
+
+/* General Helping Functions -- General Helping Functions -- General Helping Functions -- General Helping Functions -- General Helping Functions */
+
+/* Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests */
+
 /* Pre defined test names */
 const elementTagTest = "tag";
 const elementClassTest = "class";
@@ -68,3 +98,5 @@ function checkElementClass(element, elementClass) {
 Element.prototype.checkElementClass = function (elementClass) {
     return testElement(this, elementClassTest, elementClass);
 }
+
+/* Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests -- Element Tests */
