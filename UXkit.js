@@ -13,7 +13,6 @@ var helperFuncs = {
      * @param {String} className class to toggle
      */
     toggleElementClass : function (element, className) {
-        element.toggleClass();
         if (element.classList.contains(className))
             element.classList.remove(className);
         else
@@ -28,7 +27,7 @@ var helperFuncs = {
      */
     testElement : function (element, test, value) {
         var testDef = elementTests[test];
-        return checkElementProperty(element, testDef["properties"], testFunctions[testDef["function"]], value);
+        return this.checkElementProperty(element, testDef["properties"], testFunctions[testDef["function"]], value);
     },
     /**
      * Checks an element property
@@ -55,7 +54,7 @@ var helperFuncs = {
      * @returns {boolean}
      */
     checkElementTag : function (element, tag) {
-        return testElement(element, testNames.elementTagTest, tag);
+        return this.testElement(element, testNames.elementTagTest, tag);
     },
     /**
      * Checks an element parent class
@@ -64,7 +63,7 @@ var helperFuncs = {
      * @returns {boolean}
      */
     checkElementParentClass : function (element, parentClass) {
-        return testElement(element, testNames.parentElementClassTest, parentClass);
+        return this.testElement(element, testNames.parentElementClassTest, parentClass);
     },
     /**
      * Checks an element class
@@ -73,7 +72,7 @@ var helperFuncs = {
      * @returns {boolean}
      */
     checkElementClass : function (element, elementClass) {
-        return testElement(element, testNames.elementClassTest, elementClass);
+        return this.testElement(element, testNames.elementClassTest, elementClass);
     }
 }
 
@@ -126,21 +125,21 @@ const elementTests = {
     /** @constant 
      *  @type {ElementTest} test for element tag
      */
-    elementTagTest : { 
+    'tag' : { 
         "properties" : ["tagName"],
         "function" : "equal"
     },
     /** @constant 
      *  @type {ElementTest} test for element parent class
      */
-    parentElementClassTest : {
+    'parentClass' : {
         "properties" : ["parentElement", "classList"],
         "function" : "contains"
     },
     /** @constant 
      *  @type {ElementTest} test for element class
      */
-    elementClassTest : {
+    'class' : {
         "properties" : ["classList"],
         "function" : "contains"
     }
