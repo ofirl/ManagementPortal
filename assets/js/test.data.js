@@ -28,7 +28,7 @@ var menuJson = {
                     children: [
                         {
                             name: 'Add User Mapping',
-                            href: 'addusermapping.html'
+                            href: 'script-input.html'
                         }
                     ]
                 }
