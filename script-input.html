@@ -2705,21 +2705,44 @@
             <div class="row">
                 <div class="col-12">
 
-                    <div class="row justify-content-left">
-                        <div class="col-12 col-md-5 col-xl-4 my-5">
+                    <div class="card col-4">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
 
-                            <!-- Heading -->
-                            <h1 class="display-3 text-left mb-3">
-                                Logon Data
-                            </h1>
+                                    <!-- Title -->
+                                    <h4 class="card-header-title">
+                                        Logon Data
+                                    </h4>
 
-                            <!-- Subheading -->
-                            <p class="text-muted text-left mb-5">
+                                </div>
+                                <div class="col-auto mr--3">
+
+                                    <!-- Caption -->
+                                    <span class="text-muted">
+                                        New Session :
+                                    </span>
+
+                                </div>
+                                <div class="col-auto">
+
+                                    <!-- Toggle -->
+                                    <div class="custom-control custom-checkbox-toggle">
+                                        <input type="checkbox" class="custom-control-input" id="logonDataToggle" checked>
+                                        <label class="custom-control-label" for="logonDataToggle"></label>
+                                    </div>
+
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+                        <div class="card-body">
+
+                            <p class="card-title text-muted text-left">
                                 Log in to which system using what user
                             </p>
 
                             <!-- Form -->
-                            <form>
+                            <form class="card-text">
 
                                 <!-- System Name -->
                                 <div class="form-group">
