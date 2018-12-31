@@ -37,16 +37,20 @@ var menuJson = {
     ]
 }
 
-var scriptsJson = {
-    name: 'Add User Mapping',
-    inputs: [
-        {
-            name: 'card name',
-            type: 'text'
-        },
-        {
-            name: 'username',
-            type: 'text'
-        }
-    ]
-}
+var scriptsJson = [
+    {
+        name: 'Add User Mapping',
+        inputs: [
+            {
+                name: 'card name',
+                type: 'text',
+                width: 2
+            },
+            {
+                name: 'username',
+                type: 'text',
+                width: 2
+            }
+        ]
+    }
+]
