@@ -2728,7 +2728,8 @@
                                 <!-- Toggle -->
                                 <div class="custom-control custom-checkbox-toggle">
                                     <input type="checkbox" class="custom-control-input" id="logonDataToggle" checked>
-                                    <label class="custom-control-label" for="logonDataToggle" data-toggle="collapse" data-target="#logonDataCardBody" aria-expanded="true" aria-controls="logonDataCardBody"></label>
+                                    <label class="custom-control-label" for="logonDataToggle" data-toggle="collapse"
+                                        data-target="#logonDataCardBody" aria-expanded="true" aria-controls="logonDataCardBody"></label>
                                 </div>
 
                             </div>
@@ -2779,7 +2780,8 @@
                             <div class="col-auto">
 
                                 <!-- Button -->
-                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer" onclick="addNewRowClick.call(this)">
+                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer"
+                                    onclick="addNewRowClick.call(this)">
                                     New Line
                                 </a>
 
@@ -2791,7 +2793,7 @@
                             </div>
                         </div> <!-- / .row -->
                     </div>
-                    <div id="inputDataTableContainer" class="table-responsive mb-0" data-toggle="lists" data-lists-values='["card-name", "username", "status"]'>
+                    <div id="inputDataTableContainer" class="table-responsive mb-0">
                         <table class="table table-nowrap card-table">
                             <thead>
                                 <tr>
@@ -2815,8 +2817,67 @@
                                     </th>
                                 </tr>
                             </thead>
+                            <tbody class="list">
+                                <!-- <tr>
+                                    <td>
+                                        <input type="text" class="form-control form-control-flush h-100 card-name" placeholder="Card name">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="form-control form-control-flush h-100 username" placeholder="Username">
+                                    </td>
+                                    <td>
+                                        <span class="text-warning">●</span> <span class="status"> Warning </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fe fe-trash-2 mr-1" onclick="deleteRowClick.call(this)"> </span>
+                                        <span class="fe fe-copy" onclick="copyRowClick.call(this)"> </span>
+                                    </td>
+                                </tr> -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- <div id="inputDataTableContainer2" class="table-responsive mb-0" data-toggle="lists"
+                        data-lists-values='["card-name", "username", "status"]'>
+                        <table class="table table-nowrap card-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-2">
+                                        <a href="#" class="text-muted sort" data-sort="card-name">
+                                            Card Name
+                                        </a>
+                                    </th>
+                                    <th class="col-1">
+                                        <a href="#" class="text-muted sort" data-sort="username">
+                                            Username
+                                        </a>
+                                    </th>
+                                    <th class="col-1">
+                                        <a href="#" class="text-muted sort" data-sort="status">
+                                            Status
+                                        </a>
+                                    </th>
+                                    <th class="col-1 text-center">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
                             <tbody id="inputDataList" class="list">
                                 <tr>
+                                    <td class="card-name">
+                                        <input type="text" class="form-control form-control-flush h-100" placeholder="Card name">
+                                    </td>
+                                    <td class="username">
+                                        <input type="text" class="form-control form-control-flush h-100" placeholder="Username">
+                                    </td>
+                                    <td>
+                                        <span class="text-warning">●</span> <span class="status"> Warning </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fe fe-trash-2 mr-1"> </span>
+                                        <span class="fe fe-copy" onclick="copyRowClick.call(this)"> </span>
+                                    </td>
+                                </tr>
+                                 <tr>
                                     <td class="card-name">
                                         <input type="text" class="form-control form-control-flush h-100" placeholder="Card name">
                                     </td>
@@ -2879,7 +2940,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
             </div> <!-- / .row -->
         </div>
 

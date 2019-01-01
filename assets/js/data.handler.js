@@ -1,17 +1,22 @@
+/* #region Constants */
 // Consts
 const sidebarContainer = 'sidebarCollapse';
 const inputDataTableContainer = 'inputDataTableContainer';
-const inputDataList = 'iputDataList';
+const inputDataList = 'inputDataList';
+
+/* #endregion */
 
 // Input Data
 var selectedScript = 0;
 var inputData = [];
 var inputListOptions = {
-    valueNames: []
+    valueNames: ['status']
+    // items: [{'card-name': 'test', 'username': 'testing', 'status':'warning'}]
 };
 var inputList;
 
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
+/* #region Helper Functions */
 
 Element.prototype.addClass = function (className) {
     this.classList.add(className);
@@ -25,9 +30,11 @@ Element.prototype.insertAsFirstChild = function (childElement) {
     this.insertBefore(childElement, this.firstChild);
 }
 
+/* #endregion */
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 
 /* Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation */
+/* #region Menu Creation */
 
 function createMenu(menuData, parentElement) {
     // creating the menu
@@ -116,6 +123,7 @@ function loadMenusFromFile() {
     });
 }
 
+/* #endregion */
 /* Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation */
 
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
@@ -146,17 +154,26 @@ function createInputDataTable(tableContainer) {
         headerCellLink.addClass('sort');
         headerCellLink.setAttribute('data-sort', input.name.replace(' ', '-'));
         headerCellLink.innerText = input.name;
+        headerCellLink.setAttribute('onclick', 'return false;');
 
         headerCell.append(headerCellLink);
         headerRow.insertBefore(headerCell, headerRow.querySelector('[data-sort=status]').parentElement);
 
-        inputListOptions.valueNames.push(input.name.replace(' ', '-'));
+        let inputOption = {
+            name: input.name.replace(' ', '-'),
+            attr: 'value'
+        };
+        inputListOptions.valueNames.push(inputOption);
     });
 
     // total card width
     tableContainer.parentElement.addClass('col-' + totalWidth);
-    
-    inputList = new List(inputDataList, inputListOptions);
+
+    // add one new empty row
+    addNewRow(document.querySelector('#inputDataTableContainer'));
+
+    // Init list
+    inputList = new List(inputDataTableContainer, inputListOptions);
 }
 
 function addNewRowClick() {
@@ -164,6 +181,15 @@ function addNewRowClick() {
 }
 
 function addNewRow(table) {
+    if (inputList) {
+        inputList.add({
+            'card-name': '',
+            'username': '',
+            'status': 'Warning'
+        });
+        return;
+    }
+
     let inputListItem = {};
     let row = document.createElement('tr');
     scriptsJson[selectedScript].inputs.forEach(input => {
@@ -171,8 +197,8 @@ function addNewRow(table) {
         let cellInputType = input.type;
         let cellPlaceHolder = input.name;
 
-        row.innerHTML += '<td class="' + cellClass + '">' + 
-            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100" placeholder="' + cellPlaceHolder + '"> </td>';
+        row.innerHTML += '<td>' +
+            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""> </td>';
 
         inputListItem[input.name.replace(' ', '-')] = '';
     });
@@ -184,8 +210,6 @@ function addNewRow(table) {
     inputListItem['status'] = 'Warning';
 
     table.querySelector('tbody').append(row);
-
-    inputList.add(inputListItem);
 }
 
 function copyRowClick() {
@@ -193,24 +217,7 @@ function copyRowClick() {
 }
 
 function copyRow(originalRow) {
-    let inputListItem = {};
-    let row = document.createElement('tr');
-    row.innerHTML = originalRow.innerHTML;
-
-    originalRow.parentElement.insertBefore(row, originalRow.nextSibling);
-
-    let originalInputs = originalRow.querySelectorAll('input');
-    let newInputs = row.querySelectorAll('input');
-
-    newInputs.forEach((input, i) => {
-        input.value = originalInputs[i].value;
-        inputListItem[input.parentElement.classList[0]] = input.value;
-    });
-
-    // let statusText = row.querySelector('.status');
-    // statusText.innerHTML = "Waiting";
-    // let statusIcon = statusText.previousSibling;
-    // statusIcon.classList = ['text-info'];
+    // TODO : copy row
 }
 
 function deleteRowClick() {
@@ -218,7 +225,7 @@ function deleteRowClick() {
 }
 
 function deleteRow(row) {
-    row.parentElement.removeChild(row);
+    // TODO : delete row
 }
 
 function inputDataChanged() {
@@ -238,3 +245,21 @@ function dataHandlerInit() {
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
 
 dataHandlerInit();
+
+// Define value names
+var options = {
+    valueNames: [
+        'username',
+        'status',
+        { name: 'card-name', attr: 'value' }
+    ]
+};
+
+// // Init list
+// inputList = new List('inputDataTableContainer', inputListOptions);
+
+// inputList.add({
+//     'card-name': 1,
+//     'username': 'test',
+//     'status': '45'
+// });
