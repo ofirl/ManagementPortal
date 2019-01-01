@@ -17,6 +17,10 @@ var inputListOptions = {
 };
 var inputList;
 var inputListItemCounter = 0;
+var currentSort = {
+    column: '',
+    order: ''
+}
 
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 /* #region Helper Functions */
@@ -130,6 +134,7 @@ function loadMenusFromFile() {
 /* Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation -- Menu Creation */
 
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
+/* #region Input Data */
 
 function createInputDataTable(tableContainer) {
     if (!tableContainer)
@@ -151,15 +156,18 @@ function createInputDataTable(tableContainer) {
         headerCell.addClass('col-' + input.width);
         totalWidth += input.width;
 
-        let headerCellLink = document.createElement('a');
-        headerCellLink.setAttribute('href', '#');
-        headerCellLink.addClass('text-muted');
-        headerCellLink.addClass('sort');
-        headerCellLink.setAttribute('data-sort', input.name.replace(' ', '-'));
-        headerCellLink.innerText = input.name;
-        headerCellLink.setAttribute('onclick', 'return false;');
+        // let headerCellLink = document.createElement('a');
+        // headerCellLink.setAttribute('href', '#!');
+        // headerCellLink.addClass('text-muted');
+        // headerCellLink.addClass('sort');
+        // headerCellLink.setAttribute('data-sort', input.name.replace(' ', '-'));
+        // headerCellLink.innerText = input.name;
+        // headerCellLink.setAttribute('onclick', 'onclick="updateSorting.call(this);"');
 
-        headerCell.append(headerCellLink);
+        headerCell.innerHTML = '<a href="#!" class="text-muted sort" data-sort="' + input.name.replace(' ', '-') + '" ' + 
+            'onclick="updateSorting.call(this);">' + input.name + '</a>';
+
+        // headerCell.append(headerCellLink);
         headerRow.insertBefore(headerCell, headerRow.querySelector('[data-sort=status]').parentElement);
 
         let inputOption = {
@@ -179,6 +187,8 @@ function createInputDataTable(tableContainer) {
     inputList = new List(inputDataTableContainer, inputListOptions);
     inputList.remove('id', 0);
     addNewRow(document.querySelector('#' + inputDataTableContainer));
+
+    applySorting(inputList, currentSort = { column: inputList.valueNames[2].name, order: 'asc' });
 }
 
 function addNewRowClick() {
@@ -191,7 +201,7 @@ function addNewRow(table) {
             'card-name': '',
             'username': '',
             'status': 'Warning',
-            'id': inputList.items.length
+            'id': getNextInputListItemId()
         });
         return;
     }
@@ -225,8 +235,16 @@ function copyRowClick() {
 }
 
 function copyRow(originalRow) {
-    // TODO : copy row
-    inputList.add(inputList.items[originalRow.dataset.id]);
+    let newRow = {};
+    let originalItem = inputList.get('id', originalRow.dataset.id)[0]._values;
+    for (var property in originalItem) {
+        if (originalItem.hasOwnProperty(property)) {
+            newRow[property] = originalItem[property]
+        }
+    }
+    newRow.id = getNextInputListItemId();
+    inputList.add(newRow);
+    applySorting(inputList);
 }
 
 function deleteRowClick() {
@@ -234,7 +252,6 @@ function deleteRowClick() {
 }
 
 function deleteRow(row) {
-    // TODO : delete row
     inputList.remove('id', row.dataset.id);
 }
 
@@ -278,6 +295,20 @@ function getInputDataArray() {
     return inputDataArray;
 }
 
+function updateSorting() {
+    currentSort.column = this.dataset.sort;
+    // happens before the actual sorting so it's backwards
+    currentSort.order = this.classList.contains('asc') ? 'desc' : 'asc';
+}
+
+function applySorting(list, sort) {
+    sort = sort || currentSort;
+    currentSort = sort;
+
+    list.sort(sort.column, { order: sort.order });
+}
+
+/* #endregion */
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
@@ -290,22 +321,4 @@ function dataHandlerInit() {
 
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
 
-dataHandlerInit();
-
-// Define value names
-var options = {
-    valueNames: [
-        'username',
-        'status',
-        { name: 'card-name', attr: 'value' }
-    ]
-};
-
-// // Init list
-// inputList = new List('inputDataTableContainer', inputListOptions);
-
-// inputList.add({
-//     'card-name': 1,
-//     'username': 'test',
-//     'status': '45'
-// });
+//dataHandlerInit();

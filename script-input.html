@@ -2702,8 +2702,7 @@
 
         <!-- CARDS -->
         <div class="container-fluid mt--6">
-            <div class="row">
-
+            <div class="row justify-content-around">
                 <div class="card col-4">
                     <div class="card-header">
                         <div class="row align-items-center">
@@ -2763,8 +2762,32 @@
 
                     </div>
                 </div>
+                <div class="card col-4">
+                    <div class="card-header">
+                        <!-- <div class="row align-items-center"> -->
+                            <!-- <div class="col"> -->
+
+                                <!-- Title -->
+                                <h4 class="card-header-title">
+                                    Execution Details
+                                </h4>
+
+                            <!-- </div>     -->
+                        <!-- </div> / .row -->
+                    </div>
+                    <div id="logonDataCardBody" class="card-body">
+
+                        <!-- Form -->
+                        <form class="card-text">
+
+                           
+                            
+                        </form>
+
+                    </div>
+                </div>
             </div>
-            <div class="row">
+            <div class="row justify-content-center">
                 <!-- Input -->
                 <div class="card">
                     <div class="card-header">
@@ -2779,13 +2802,18 @@
                             </div>
                             <div class="col-auto">
 
-                                <!-- Button -->
-                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer"
-                                    onclick="addNewRowClick.call(this)">
+                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer" onclick="">
+                                    Clear Data
+                                </a>
+
+                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer" onclick="addNewRowClick.call(this)">
                                     New Line
                                 </a>
 
-                                <!-- Button -->
+                                <a href="#!" class="btn btn-sm btn-white">
+                                    Import
+                                </a>
+
                                 <a href="#!" class="btn btn-sm btn-white">
                                     Export
                                 </a>
@@ -2808,7 +2836,7 @@
                                         </a>
                                     </th> -->
                                     <th class="col-1">
-                                        <a href="#" class="text-muted sort" data-sort="status">
+                                        <a href="#!" class="text-muted sort" data-sort="status" onclick="updateSorting.call(this);">
                                             Status
                                         </a>
                                     </th>
@@ -2941,32 +2969,39 @@
                         </table>
                     </div>
                 </div> -->
-            </div> <!-- / .row -->
-        </div>
+                </div> <!-- / .row -->
+            </div>
 
-    </div> <!-- / .main-content -->
+        </div> <!-- / .main-content -->
 
-    <!-- JAVASCRIPT
+        <!-- JAVASCRIPT
     ================================================== -->
-    <!-- Libs JS -->
-    <script src="assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/libs/chart.js/dist/Chart.min.js"></script>
-    <script src="assets/libs/chart.js/Chart.extension.min.js"></script>
-    <script src="assets/libs/highlightjs/highlight.pack.min.js"></script>
-    <script src="assets/libs/flatpickr/dist/flatpickr.min.js"></script>
-    <script src="assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
-    <script src="assets/libs/list.js/dist/list.min.js"></script>
-    <script src="assets/libs/quill/dist/quill.min.js"></script>
-    <script src="assets/libs/dropzone/dist/min/dropzone.min.js"></script>
-    <script src="assets/libs/select2/dist/js/select2.min.js"></script>
+        <!-- Libs JS -->
+        <script src="assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/libs/chart.js/dist/Chart.min.js"></script>
+        <script src="assets/libs/chart.js/Chart.extension.min.js"></script>
+        <script src="assets/libs/highlightjs/highlight.pack.min.js"></script>
+        <script src="assets/libs/flatpickr/dist/flatpickr.min.js"></script>
+        <script src="assets/libs/jquery-mask-plugin/dist/jquery.mask.min.js"></script>
+        <script src="assets/libs/list.js/dist/list.min.js"></script>
+        <script src="assets/libs/quill/dist/quill.min.js"></script>
+        <script src="assets/libs/dropzone/dist/min/dropzone.min.js"></script>
+        <script src="assets/libs/select2/dist/js/select2.min.js"></script>
 
-    <!-- Theme JS -->
-    <script src="assets/js/theme.min.js"></script>
+        <!-- Theme JS -->
+        <script src="assets/js/theme.min.js"></script>
 
-    <script type="text/javascript" src="assets/js/test.data.js"></script>
-    <!-- Data Handler -->
-    <script type="text/javascript" src="assets/js/data.handler.js"></script>
+        <Script type="text/javascript">
+            function init() {
+                loadMenusFromFile();
+                createInputDataTable();
+            }
+        </Script>
+
+        <script type="text/javascript" src="assets/js/test.data.js"></script>
+        <!-- Data Handler -->
+        <script type="text/javascript" src="assets/js/data.handler.js" onload="init()"></script>
 
 </body>
 

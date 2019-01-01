@@ -3279,9 +3279,16 @@
     <!-- Theme JS -->
     <script src="assets/js/theme.min.js"></script>
 
+    <Script type="text/javascript">
+        function init() {
+            loadMenusFromFile();
+        }
+    </Script>
+
     <script type="text/javascript" src="assets/js/test.data.js"></script>
     <!-- Data Handler -->
-    <script type="text/javascript" src="assets/js/data.handler.js"></script>
+    <script type="text/javascript" src="assets/js/data.handler.js" onload="init()"></script>
+
 
 </body>
 
