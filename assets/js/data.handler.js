@@ -8,12 +8,15 @@ const inputDataList = 'inputDataList';
 
 // Input Data
 var selectedScript = 0;
-var inputData = [];
 var inputListOptions = {
-    valueNames: ['status']
+    valueNames: [
+        'status',
+        { data: ['id'] }
+    ]
     // items: [{'card-name': 'test', 'username': 'testing', 'status':'warning'}]
 };
 var inputList;
+var inputListItemCounter = 0;
 
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 /* #region Helper Functions */
@@ -134,7 +137,7 @@ function createInputDataTable(tableContainer) {
 
     // data-lists-values for sorting
     let inputFields = [];
-    scriptsJson[selectedScript].inputs.forEach(input => {
+    scriptsArray[selectedScript].inputs.forEach(input => {
         inputFields.push(input.name.replace(' ', '-'));
     });
     inputFields.push('status');
@@ -143,7 +146,7 @@ function createInputDataTable(tableContainer) {
     // table header cells
     let totalWidth = 2;
     let headerRow = tableContainer.querySelector('thead tr');
-    scriptsJson[selectedScript].inputs.forEach(input => {
+    scriptsArray[selectedScript].inputs.forEach(input => {
         let headerCell = document.createElement('th');
         headerCell.addClass('col-' + input.width);
         totalWidth += input.width;
@@ -170,10 +173,12 @@ function createInputDataTable(tableContainer) {
     tableContainer.parentElement.addClass('col-' + totalWidth);
 
     // add one new empty row
-    addNewRow(document.querySelector('#inputDataTableContainer'));
+    addNewRow(document.querySelector('#' + inputDataTableContainer));
 
     // Init list
     inputList = new List(inputDataTableContainer, inputListOptions);
+    inputList.remove('id', 0);
+    addNewRow(document.querySelector('#' + inputDataTableContainer));
 }
 
 function addNewRowClick() {
@@ -185,27 +190,30 @@ function addNewRow(table) {
         inputList.add({
             'card-name': '',
             'username': '',
-            'status': 'Warning'
+            'status': 'Warning',
+            'id': inputList.items.length
         });
         return;
     }
 
     let inputListItem = {};
     let row = document.createElement('tr');
-    scriptsJson[selectedScript].inputs.forEach(input => {
+    row.setAttribute('data-id', getNextInputListItemId());
+    scriptsArray[selectedScript].inputs.forEach(input => {
         let cellClass = input.name.replace(' ', '-');
         let cellInputType = input.type;
         let cellPlaceHolder = input.name;
 
         row.innerHTML += '<td>' +
-            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""> </td>';
+            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' + 
+            'onchange="inputDataChanged.call(this);"> </td>';
 
         inputListItem[input.name.replace(' ', '-')] = '';
     });
 
     row.innerHTML += '<td> <span class="text-warning">●</span> <span class="status"> Warning </span> </td>' +
-        '<td class="text-center"> <span class="fe fe-trash-2 mr-1" onclick="deleteRowClick.call(this)"> </span>' +
-        '<span class="fe fe-copy" onclick="copyRowClick.call(this)"> </span> </td> </tr>';
+        '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"> </span>' +
+        '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)"> </span> </td> </tr>';
 
     inputListItem['status'] = 'Warning';
 
@@ -218,6 +226,7 @@ function copyRowClick() {
 
 function copyRow(originalRow) {
     // TODO : copy row
+    inputList.add(inputList.items[originalRow.dataset.id]);
 }
 
 function deleteRowClick() {
@@ -226,10 +235,47 @@ function deleteRowClick() {
 
 function deleteRow(row) {
     // TODO : delete row
+    inputList.remove('id', row.dataset.id);
 }
 
 function inputDataChanged() {
+    let changedValueId = [].slice.apply(this.classList).filter( function (x) {
+        return inputList.valueNames.reduce( function (acc, cur) {
+            if (cur.data)
+                acc = acc || cur.data[0] == x;
+            else if (cur.name)
+                acc = acc || cur.name == x;
+            else
+                acc = acc || cur == x;
 
+            return acc;
+        }, false);
+    });
+
+    let listItem = inputList.get('id', this.parentElement.parentElement.dataset.id)[0];
+    listItem._values[changedValueId] = this.value;
+}
+
+function getNextInputListItemId() {
+    return inputListItemCounter++;
+}
+
+function getInputDataArray() {
+    let inputDataArray = [];
+    let inputs = scriptsArray[selectedScript].inputs.reduce( function (acc, cur) {
+        acc.push(cur.name.replace(' ', '-'));
+        return acc;
+    } ,[]);
+
+    inputList.items.forEach(item => {
+        let dataRow = [];
+        inputs.forEach(input => {
+            dataRow.push(item._values[input]);
+        });
+        inputDataArray.push(dataRow);
+    });
+
+    return inputDataArray;
 }
 
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */

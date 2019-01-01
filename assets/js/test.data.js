@@ -37,7 +37,7 @@ var menuJson = {
     ]
 }
 
-var scriptsJson = [
+var scriptsArray = [
     {
         name: 'Add User Mapping',
         inputs: [
