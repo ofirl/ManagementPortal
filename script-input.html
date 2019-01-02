@@ -2703,87 +2703,92 @@
         <!-- CARDS -->
         <div class="container-fluid mt--6">
             <div class="row justify-content-around">
-                <div class="card col-4">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col">
+                <div class="h-100 col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col">
 
-                                <!-- Title -->
-                                <h4 class="card-header-title">
-                                    Logon Data
-                                </h4>
+                                    <!-- Title -->
+                                    <h4 class="card-header-title">
+                                        Logon Data
+                                    </h4>
 
-                            </div>
-                            <div class="col-auto mr--3">
+                                </div>
+                                <div class="col-auto mr--3">
 
-                                <!-- Caption -->
-                                <span class="text-muted">
-                                    New Session :
-                                </span>
+                                    <!-- Caption -->
+                                    <span class="text-muted">
+                                        New Session :
+                                    </span>
 
-                            </div>
-                            <div class="col-auto">
+                                </div>
+                                <div class="col-auto">
 
-                                <!-- Toggle -->
-                                <div class="custom-control custom-checkbox-toggle">
-                                    <input type="checkbox" class="custom-control-input" id="logonDataToggle" checked>
-                                    <label class="custom-control-label" for="logonDataToggle" data-toggle="collapse"
-                                        data-target="#logonDataCardBody" aria-expanded="true" aria-controls="logonDataCardBody"></label>
+                                    <!-- Toggle -->
+                                    <div class="custom-control custom-checkbox-toggle">
+                                        <input type="checkbox" class="custom-control-input" id="logonDataToggle"
+                                            checked>
+                                        <label class="custom-control-label" for="logonDataToggle" data-toggle="collapse"
+                                            data-target="#logonDataCardBody" aria-expanded="true" aria-controls="logonDataCardBody"></label>
+                                    </div>
+
+                                </div>
+                            </div> <!-- / .row -->
+                        </div>
+                        <div id="logonDataCardBody" class="card-body collapse show">
+
+                            <p class="card-title text-muted text-left">
+                                Log in to which system using what user
+                            </p>
+
+                            <!-- Form -->
+                            <form class="card-text">
+
+                                <!-- System Name -->
+                                <div class="form-group">
+                                    <!-- Label -->
+                                    <label>System</label>
+                                    <!-- Input -->
+                                    <input type="text" class="form-control" placeholder="system">
+                                </div>
+                                <!-- System Name -->
+                                <div class="form-group">
+                                    <!-- Label -->
+                                    <label>Username</label>
+                                    <!-- Input -->
+                                    <input type="text" class="form-control" placeholder="system">
                                 </div>
 
-                            </div>
-                        </div> <!-- / .row -->
-                    </div>
-                    <div id="logonDataCardBody" class="card-body collapse show">
+                            </form>
 
-                        <p class="card-title text-muted text-left">
-                            Log in to which system using what user
-                        </p>
-
-                        <!-- Form -->
-                        <form class="card-text">
-
-                            <!-- System Name -->
-                            <div class="form-group">
-                                <!-- Label -->
-                                <label>System</label>
-                                <!-- Input -->
-                                <input type="text" class="form-control" placeholder="system">
-                            </div>
-                            <!-- System Name -->
-                            <div class="form-group">
-                                <!-- Label -->
-                                <label>Username</label>
-                                <!-- Input -->
-                                <input type="text" class="form-control" placeholder="system">
-                            </div>
-
-                        </form>
-
+                        </div>
                     </div>
                 </div>
-                <div class="card col-4">
-                    <div class="card-header">
-                        <!-- <div class="row align-items-center"> -->
+                <div class="h-100 col-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <!-- <div class="row align-items-center"> -->
                             <!-- <div class="col"> -->
 
-                                <!-- Title -->
-                                <h4 class="card-header-title">
-                                    Execution Details
-                                </h4>
+                            <!-- Title -->
+                            <h4 class="card-header-title">
+                                Execution Details
+                            </h4>
 
                             <!-- </div>     -->
-                        <!-- </div> / .row -->
-                    </div>
-                    <div id="logonDataCardBody" class="card-body">
+                            <!-- </div> / .row -->
+                        </div>
+                        <div id="logonDataCardBody" class="card-body">
 
-                        <!-- Form -->
-                        <form class="card-text">
+                            <!-- Form -->
+                            <form class="card-text">
 
-                           
-                            
-                        </form>
 
+
+                            </form>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2802,11 +2807,13 @@
                             </div>
                             <div class="col-auto">
 
-                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer" onclick="">
+                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer"
+                                    onclick="">
                                     Clear Data
                                 </a>
 
-                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer" onclick="addNewRowClick.call(this)">
+                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer"
+                                    onclick="addNewRowClick.call(this)">
                                     New Line
                                 </a>
 
