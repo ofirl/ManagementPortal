@@ -811,6 +811,31 @@
         </div>
     </div>
 
+    <!-- Modal: Input Data Error -->
+    <div class="modal fade" id="inputDataErrorModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inputDataErrorModalLabel"> Oops... </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        There are errors in the input data... <br>
+                        Are you sure you want to execute the script?
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="executeScript(true);">
+                        Yes </button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"> No </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- NAVIGATION
     ================================================== -->
 
@@ -2678,12 +2703,12 @@
 
                             <!-- Pretitle -->
                             <h6 class="header-pretitle text-secondary">
-                                Overview
+                                Script Execution
                             </h6>
 
                             <!-- Title -->
-                            <h1 class="header-title text-white">
-                                Performance
+                            <h1 id="script-title" class="header-title text-white">
+                                Script Name
                             </h1>
 
                         </div>
@@ -2691,9 +2716,9 @@
                 </div> <!-- / .header-body -->
 
                 <!-- Footer -->
-                <div class="header-footer">
+                <div id="script-desc" class="header-footer">
 
-                    footer
+                    Script Description
 
                 </div>
 
@@ -2779,12 +2804,15 @@
                             <!-- </div>     -->
                             <!-- </div> / .row -->
                         </div>
-                        <div id="logonDataCardBody" class="card-body">
+                        <div id="ExecutionDetailsCardBody" class="card-body">
 
                             <!-- Form -->
                             <form class="card-text">
 
-
+                                <button type="button" class="btn btn-primary" onclick="executeScript();"> Execute
+                                </button>
+                                <button type="button" class="btn btn-primary" onclick="saveForLater();"> Save for later
+                                </button>
 
                             </form>
 
@@ -2794,37 +2822,68 @@
             </div>
             <div class="row justify-content-center">
                 <!-- Input -->
-                <div class="card">
+                <div data-toggle="lists" class="card">
                     <div class="card-header">
                         <div class="row align-items-center">
                             <div class="col">
-
+                                <div class="row align-items-center col-auto">
                                 <!-- Title -->
-                                <h4 class="card-header-title">
+                                <h4 class="card-header-title col-auto">
                                     Input Data
+                                    
                                 </h4>
-
+                                <div class="col-auto ml-4 pr-0">
+                                    <span class="fe fe-search"> </span>
+                                </div>
+                                <div class="col ml-0 pl-3">
+                                    <input type="search" class="form-control form-control-flush" placeholder="Search" oninput="searchInputList.call(this);">
+                                </div>
+                            </div>
                             </div>
                             <div class="col-auto">
+                                <div class="row">
 
-                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer"
-                                    onclick="">
-                                    Clear Data
-                                </a>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Filter Status
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#!" data-filtercolumn="status" data-filtervalue="Error" onclick="filterInputTable.call(this);">Filter Errors</a>
+                                        <a class="dropdown-item" href="#!" data-filtercolumn="status" data-filtervalue="Success" onclick="filterInputTable.call(this);">Filter Success</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#!" data-filtercolumn="" data-filtervalue="" onclick="filterInputTable.call(this);">Clear All Filter</a>
+                                    </div>
+                                </div>
 
-                                <a href="#!" class="btn btn-sm btn-white" data-target="#inputDataTableContainer"
-                                    onclick="addNewRowClick.call(this)">
+                                <a href="#!" class="btn btn-sm btn-white ml-2" data-target="#inputDataTableContainer" onclick="addNewRowClick.call(this);">
                                     New Line
                                 </a>
+                                
+                                <div class="btn-group ml-2">
+                                    <button type="button" class="btn btn-sm btn-white">Import</button>
+                                    <button type="button" class="btn btn-sm btn-white dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#!">Import From Clipboard</a>
+                                        <a class="dropdown-item" href="#!">Import From Local File</a>
+                                    </div>
+                                </div>
 
-                                <a href="#!" class="btn btn-sm btn-white">
-                                    Import
-                                </a>
-
-                                <a href="#!" class="btn btn-sm btn-white">
-                                    Export
-                                </a>
-
+                                <div class="dropdown ml-2">
+                                    <a href="#!" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fe fe-more-vertical"></i>
+                                    </a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a href="#!" class="dropdown-item">
+                                            Export
+                                        </a>
+                                        <a href="#!" class="dropdown-item" onclick="clearInputData();">
+                                            Clear All Data
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </div> <!-- / .row -->
                     </div>
@@ -3001,8 +3060,11 @@
 
         <Script type="text/javascript">
             function init() {
+                updateSelectedScript();
+                changeTitles();
                 loadMenusFromFile();
                 createInputDataTable();
+                updateTooltips();
             }
         </Script>
 

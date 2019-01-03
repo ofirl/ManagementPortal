@@ -40,16 +40,19 @@ var menuJson = {
 var scriptsArray = [
     {
         name: 'Add User Mapping',
+        description: 'Adds a mapping for the user in table "vusrextid"',
         inputs: [
             {
                 name: 'card name',
                 type: 'text',
-                width: 2
+                width: 2,
+                optional: false
             },
             {
                 name: 'username',
                 type: 'text',
-                width: 2
+                width: 2,
+                optional: false
             }
         ]
     }

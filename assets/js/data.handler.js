@@ -7,7 +7,8 @@ const inputDataList = 'inputDataList';
 /* #endregion */
 
 // Input Data
-var selectedScript = 0;
+var selectedScriptIndex = 0;
+var currentScript = {};
 var inputListOptions = {
     valueNames: [
         'status',
@@ -35,6 +36,22 @@ Element.prototype.removeClass = function (className) {
 
 Element.prototype.insertAsFirstChild = function (childElement) {
     this.insertBefore(childElement, this.firstChild);
+}
+
+//Returns true if it is a DOM node
+function isNode(o) {
+    return (
+        typeof Node === "object" ? o instanceof Node :
+            o && typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName === "string"
+    );
+}
+
+//Returns true if it is a DOM element    
+function isElement(o) {
+    return (
+        typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
+            o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
+    );
 }
 
 /* #endregion */
@@ -142,7 +159,7 @@ function createInputDataTable(tableContainer) {
 
     // data-lists-values for sorting
     let inputFields = [];
-    scriptsArray[selectedScript].inputs.forEach(input => {
+    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
         inputFields.push(input.name.replace(' ', '-'));
     });
     inputFields.push('status');
@@ -151,7 +168,7 @@ function createInputDataTable(tableContainer) {
     // table header cells
     let totalWidth = 2;
     let headerRow = tableContainer.querySelector('thead tr');
-    scriptsArray[selectedScript].inputs.forEach(input => {
+    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
         let headerCell = document.createElement('th');
         headerCell.addClass('col-' + input.width);
         totalWidth += input.width;
@@ -164,7 +181,7 @@ function createInputDataTable(tableContainer) {
         // headerCellLink.innerText = input.name;
         // headerCellLink.setAttribute('onclick', 'onclick="updateSorting.call(this);"');
 
-        headerCell.innerHTML = '<a href="#!" class="text-muted sort" data-sort="' + input.name.replace(' ', '-') + '" ' + 
+        headerCell.innerHTML = '<a href="#!" class="text-muted sort" data-sort="' + input.name.replace(' ', '-') + '" ' +
             'onclick="updateSorting.call(this);">' + input.name + '</a>';
 
         // headerCell.append(headerCellLink);
@@ -200,34 +217,42 @@ function addNewRow(table) {
         inputList.add({
             'card-name': '',
             'username': '',
-            'status': 'Warning',
+            'status': 'Error',
             'id': getNextInputListItemId()
         });
+        $(table.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
+        updateStatus(table.querySelector('tbody').lastElementChild);
         return;
     }
 
     let inputListItem = {};
     let row = document.createElement('tr');
-    row.setAttribute('data-id', getNextInputListItemId());
-    scriptsArray[selectedScript].inputs.forEach(input => {
+    let rowId = getNextInputListItemId();
+    row.setAttribute('data-id', rowId);
+    row.setAttribute('id', rowId);
+    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
         let cellClass = input.name.replace(' ', '-');
         let cellInputType = input.type;
         let cellPlaceHolder = input.name;
 
         row.innerHTML += '<td>' +
-            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' + 
-            'onchange="inputDataChanged.call(this);"> </td>';
+            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 bw-flush-1 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' +
+            'oninput="inputDataChanged.call(this);"> </td>';
 
         inputListItem[input.name.replace(' ', '-')] = '';
     });
 
-    row.innerHTML += '<td> <span class="text-warning">●</span> <span class="status"> Warning </span> </td>' +
-        '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"> </span>' +
-        '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)"> </span> </td> </tr>';
+    row.innerHTML += '<td> <span data-role="icon" class="text-warning">●</span> <span class="status"' +
+        'data-toggle="tooltip" data-html="true" title=""> Pending </span> </td>' +
+        '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"' +
+        'data-toggle="tooltip" data-placement="top" data-html="true" title="Delete row"> </span>' +
+        '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)" data-toggle="tooltip"' +
+        'data-placement="top" data-html="true" title="Copy row"> </span> </td> </tr>';
 
     inputListItem['status'] = 'Warning';
 
     table.querySelector('tbody').append(row);
+    updateStatus(row);
 }
 
 function copyRowClick() {
@@ -244,6 +269,9 @@ function copyRow(originalRow) {
     }
     newRow.id = getNextInputListItemId();
     inputList.add(newRow);
+    updateStatus(originalRow.parentElement.lastElementChild);
+    $(originalRow.parentElement.lastElementChild.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
+
     applySorting(inputList);
 }
 
@@ -256,8 +284,8 @@ function deleteRow(row) {
 }
 
 function inputDataChanged() {
-    let changedValueId = [].slice.apply(this.classList).filter( function (x) {
-        return inputList.valueNames.reduce( function (acc, cur) {
+    let changedValueId = [].slice.apply(this.classList).filter(function (x) {
+        return inputList.valueNames.reduce(function (acc, cur) {
             if (cur.data)
                 acc = acc || cur.data[0] == x;
             else if (cur.name)
@@ -271,6 +299,8 @@ function inputDataChanged() {
 
     let listItem = inputList.get('id', this.parentElement.parentElement.dataset.id)[0];
     listItem._values[changedValueId] = this.value;
+
+    updateStatus(this.parentElement.parentElement);
 }
 
 function getNextInputListItemId() {
@@ -279,10 +309,10 @@ function getNextInputListItemId() {
 
 function getInputDataArray() {
     let inputDataArray = [];
-    let inputs = scriptsArray[selectedScript].inputs.reduce( function (acc, cur) {
+    let inputs = scriptsArray[selectedScriptIndex].inputs.reduce(function (acc, cur) {
         acc.push(cur.name.replace(' ', '-'));
         return acc;
-    } ,[]);
+    }, []);
 
     inputList.items.forEach(item => {
         let dataRow = [];
@@ -308,15 +338,122 @@ function applySorting(list, sort) {
     list.sort(sort.column, { order: sort.order });
 }
 
+function updateStatus(row) {
+    let tooltipTitle = [];
+    let statusCell = row.lastElementChild.previousElementSibling;
+    let statusText = statusCell.querySelector('.status');
+    let statusIcon = statusCell.querySelector('[data-role="icon"]');
+    let error = false;
+
+    statusText.innerHTML = 'Pending';
+    statusIcon.className = 'text-warning';
+
+    currentScript.inputs.forEach(input => {
+        if (!input.optional) {
+            let inputEle = row.querySelector('.' + input.name.replace(' ', '-'));
+            inputEle.removeClass('is-invalid');
+
+            let val = inputEle.value;
+            if (val != undefined && val != null && val != '') {
+                return;
+            }
+
+            inputEle.addClass('is-invalid');
+
+            statusText.innerHTML = 'Error';
+            statusIcon.className = 'text-danger';
+            tooltipTitle.push('<b>' + input.name + '</b> must not be empty');
+        }
+    });
+
+    statusText.setAttribute('title', tooltipTitle.join('<br>'));
+    $(statusText).tooltip('dispose');
+    if (tooltipTitle.length > 0)
+        $(statusText).tooltip();
+
+    if (inputList) {
+        let listItem = inputList.get('id', row.dataset.id)[0];
+        listItem._values['status'] = statusText.innerHTML;
+    }
+}
+
+function changeTitles() {
+    document.querySelector('#script-title').innerHTML = currentScript.name;
+    document.querySelector('#script-desc').innerHTML = currentScript.description;
+}
+
+function clearInputData() {
+    inputList.clear();
+}
+
+function filterInputTable() {
+    let filterColumn = this.dataset['filtercolumn'];
+    let filterValue = this.dataset['filtervalue'];
+
+    if (filterValue == '' && filterColumn == '') {
+        inputList.filter();
+        return;    
+    }
+
+    inputList.filter(function(item) {
+        return item._values[filterColumn].localeCompare(filterValue) == 0;
+    });
+}
+
 /* #endregion */
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 
+/* Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute */
+/* #region Execute */
+
+function executeScript(forceRun) {
+    forceRun = forceRun || false;
+
+    let error = false;
+    inputList.items.forEach(item => {
+        error = error || item._values['status'] == "Error";
+    });
+
+    if (!forceRun && error) {
+        // do alert
+        $('#inputDataErrorModal').modal('show');
+        return;
+    }
+
+    alert('run script');
+
+    let statusCells = [].slice.call(document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status')).map((e) => e.parentElement);
+    statusCells.forEach((e) => e.addClass('is-loading'));
+}
+
+function saveForLater() {
+
+}
+
+function searchInputList() {
+    inputList.fuzzySearch(this.value);
+}
+
+/* #endregion */
+/* Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute */
+
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
+
+function updateSelectedScript() {
+    currentScript = scriptsArray[selectedScriptIndex];
+}
+
+function updateTooltips() {
+    $('[data-toggle="tooltip"]').tooltip();
+}
 
 // Init when the script is loaded
 function dataHandlerInit() {
+    updateSelectedScript();
+    changeTitles();
     loadMenusFromFile();
     createInputDataTable();
+    updateTooltips();
 }
 
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
