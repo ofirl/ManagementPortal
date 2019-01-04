@@ -33,7 +33,7 @@
 
     <!-- MODALS
     ================================================== -->
-
+    <!-- #region Modals -->
     <!-- Modal: Demo -->
 
     <div class="modal fade fixed-right" id="modalDemo" tabindex="-1" role="dialog" aria-hidden="true">
@@ -836,8 +836,11 @@
         </div>
     </div>
 
+    <!-- #endregion -->
+
     <!-- NAVIGATION
     ================================================== -->
+    <!-- #region Navigation -->
 
     <nav class="navbar navbar-vertical fixed-left navbar-expand-md navbar-light" id="sidebar">
         <div class="container-fluid">
@@ -2147,6 +2150,7 @@
         </div> <!-- / .container -->
     </nav>
 
+    <!-- #endregion -->
 
     <!-- MAIN CONTENT
     ================================================== -->
@@ -2691,7 +2695,6 @@
             </div>
         </nav>
 
-
         <!-- HEADER -->
         <div class="header bg-dark pb-5">
             <div class="container-fluid">
@@ -2827,63 +2830,97 @@
                         <div class="row align-items-center">
                             <div class="col">
                                 <div class="row align-items-center col-auto">
-                                <!-- Title -->
-                                <h4 class="card-header-title col-auto">
-                                    Input Data
-                                    
-                                </h4>
-                                <div class="col-auto ml-4 pr-0">
-                                    <span class="fe fe-search"> </span>
+                                    <!-- Title -->
+                                    <h4 class="card-header-title col-auto">
+                                        Input Data
+
+                                    </h4>
+                                    <div class="col-auto ml-4 pr-0">
+                                        <span class="fe fe-search"> </span>
+                                    </div>
+                                    <div class="col ml-0 pl-3">
+                                        <input type="search" class="form-control form-control-flush" placeholder="Search"
+                                            oninput="searchInputList.call(this);">
+                                    </div>
                                 </div>
-                                <div class="col ml-0 pl-3">
-                                    <input type="search" class="form-control form-control-flush" placeholder="Search" oninput="searchInputList.call(this);">
-                                </div>
-                            </div>
                             </div>
                             <div class="col-auto">
                                 <div class="row">
 
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Filter Status
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#!" data-filtercolumn="status" data-filtervalue="Error" onclick="filterInputTable.call(this);">Filter Errors</a>
-                                        <a class="dropdown-item" href="#!" data-filtercolumn="status" data-filtervalue="Success" onclick="filterInputTable.call(this);">Filter Success</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#!" data-filtercolumn="" data-filtervalue="" onclick="filterInputTable.call(this);">Clear All Filter</a>
+                                    <div id="filterStatusOptions" class="btn-group btn-group-toggle collapse active" data-toggle="buttons">
+                                        <label class="btn btn-sm btn-white" data-filtercolumn="status" 
+                                        data-filtervalue="Success" onclick="filterInputTable.call(this);">
+                                            Success
+                                        </label>
+                                        <label class="btn btn-sm btn-white" data-filtercolumn="status" 
+                                            data-filtervalue="Pending" onclick="filterInputTable.call(this);">
+                                            Pending
+                                        </label>
+                                        <label class="btn btn-sm btn-white" data-filtercolumn="status" 
+                                            data-filtervalue="Error" onclick="filterInputTable.call(this);">
+                                            Error
+                                        </label>
                                     </div>
-                                </div>
 
-                                <a href="#!" class="btn btn-sm btn-white ml-2" data-target="#inputDataTableContainer" onclick="addNewRowClick.call(this);">
-                                    New Line
-                                </a>
-                                
-                                <div class="btn-group ml-2">
-                                    <button type="button" class="btn btn-sm btn-white">Import</button>
-                                    <button type="button" class="btn btn-sm btn-white dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="sr-only">Toggle Dropdown</span>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#!">Import From Clipboard</a>
-                                        <a class="dropdown-item" href="#!">Import From Local File</a>
-                                    </div>
-                                </div>
+                                    <span id="filterOptionsToggle" class="ml-1" data-toggle="collapse" data-target="#filterStatusOptions" 
+                                        aria-controls="filterStatusOptions" aria-expanded="false">
+                                        <button type="button" class="btn btn-sm btn-white" data-toggle="button" aria-pressed="false" autocomplete="off">
+                                            Filter Status Options
+                                        </button>
+                                    </span>
 
-                                <div class="dropdown ml-2">
-                                    <a href="#!" class="dropdown-ellipses dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="fe fe-more-vertical"></i>
-                                    </a>
-                                    <div class="dropdown-menu dropdown-menu-right">
-                                        <a href="#!" class="dropdown-item">
-                                            Export
+                                    <!-- <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-white dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                            Filter Status
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#!" data-filtercolumn="status"
+                                                data-filtervalue="Error" onclick="filterInputTable.call(this);">Filter
+                                                Errors</a>
+                                            <a class="dropdown-item" href="#!" data-filtercolumn="status"
+                                                data-filtervalue="Success" onclick="filterInputTable.call(this);">Filter
+                                                Success</a>
+                                            <a class="dropdown-item" href="#!" data-filtercolumn="status"
+                                                data-filtervalue="Pending" onclick="filterInputTable.call(this);">Filter
+                                                Pending</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#!" data-filtercolumn="" data-filtervalue=""
+                                                onclick="filterInputTable.call(this);">Clear All Filter</a>
+                                        </div>
+                                    </div> -->
+
+                                    <button type="button" class="btn btn-sm btn-white ml-2" data-target="#inputDataTableContainer" onclick="addNewRowClick.call(this);">
+                                        New Line
+                                    </button>
+
+                                    <div class="btn-group ml-2">
+                                        <button type="button" class="btn btn-sm btn-white">Import</button>
+                                        <button type="button" class="btn btn-sm btn-white dropdown-toggle dropdown-toggle-split"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#!">Import From Clipboard</a>
+                                            <a class="dropdown-item" href="#!">Import From Local File</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="dropdown ml-2">
+                                        <a href="#!" class="dropdown-ellipses dropdown-toggle" role="button"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fe fe-more-vertical"></i>
                                         </a>
-                                        <a href="#!" class="dropdown-item" onclick="clearInputData();">
-                                            Clear All Data
-                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a href="#!" class="dropdown-item">
+                                                Export
+                                            </a>
+                                            <a href="#!" class="dropdown-item" onclick="clearInputData();">
+                                                Clear All Data
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                             </div>
                         </div> <!-- / .row -->
                     </div>

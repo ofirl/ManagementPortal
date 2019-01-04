@@ -22,16 +22,44 @@ var currentSort = {
     column: '',
     order: ''
 }
+var currentFilter = [
+    // {
+    //     column: '',
+    //     value: ''
+    // }
+];
+var currentSearch = '';
+
+// Execution Result
+var isExecuting = false;
+// testing - will be loaded with the result script
+var executionResult = {
+    // timestamp: '123',
+    // results: [
+    //     {
+    //         id: 1,
+    //         success: true,
+    //         desc: ''
+    //     },
+    //     {
+    //         id: 2,
+    //         success: false,
+    //         desc: 'error description'
+    //     }
+    // ]
+};
 
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 /* #region Helper Functions */
 
 Element.prototype.addClass = function (className) {
     this.classList.add(className);
+    return this;
 }
 
 Element.prototype.removeClass = function (className) {
     this.classList.remove(className);
+    return this;
 }
 
 Element.prototype.insertAsFirstChild = function (childElement) {
@@ -386,18 +414,60 @@ function clearInputData() {
     inputList.clear();
 }
 
-function filterInputTable() {
-    let filterColumn = this.dataset['filtercolumn'];
-    let filterValue = this.dataset['filtervalue'];
+function refreshInputTableFilter() {
+    filterInputTable(true);
+}
 
-    if (filterValue == '' && filterColumn == '') {
+function filterInputTable(refreshFilter) {
+    refreshFilter = refreshFilter || false;
+
+    if (!refreshFilter) {
+        let filterColumn = this.dataset['filtercolumn'];
+        let filterValue = this.dataset['filtervalue'];
+
+        if (filterValue != '' || filterColumn != '') {
+            let filterObject = {
+                column : filterColumn,
+                value: filterValue
+            };
+            let foundItemIndex = currentFilter.findIndex( (v, i) => v.column == filterColumn && v.value == filterValue );
+            if (foundItemIndex != -1) {
+                currentFilter.splice(foundItemIndex, 1);
+            }
+            else {
+                currentFilter.push(filterObject);
+            }
+        }
+        else {
+            currentFilter = [];
+        }
+    }
+
+    if (currentFilter.length == 0) {
+        document.querySelectorAll('#filterStatusOptions label').forEach( (e) => e.removeClass('active') );
         inputList.filter();
-        return;    
+        return;
     }
 
     inputList.filter(function(item) {
-        return item._values[filterColumn].localeCompare(filterValue) == 0;
+        let itemResult = false;
+        return currentFilter.reduce( function (acc, curr, idx, src) {
+            console.log(curr);
+            console.log(item._values);
+            console.log(item._values[curr.column].localeCompare(curr.value));
+            return acc || item._values[curr.column].localeCompare(curr.value) == 0;
+        }, false);
     });
+}
+
+function clearInputTableFilter() {
+    currentFilter = [];
+    filterInputTable(true);
+}
+
+function searchInputList() {
+    currentSearch = this.value;
+    inputList.fuzzySearch(currentSearch);
 }
 
 /* #endregion */
@@ -422,16 +492,79 @@ function executeScript(forceRun) {
 
     alert('run script');
 
-    let statusCells = [].slice.call(document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status')).map((e) => e.parentElement);
-    statusCells.forEach((e) => e.addClass('is-loading'));
+    clearInputTableFilter();
+
+    let statusCells = document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status');
+    statusCells.forEach( (e) => e.previousElementSibling.addClass('is-loading').addClass('pr-4') );
+    statusCells.forEach( (e) => e.innerText = 'Executing' );
+
+    document.querySelector('#filterOptionsToggle').children[0].setAttribute('disabled', '');
+    $('#filterStatusOptions').collapse('hide');
+
+    // let statusCells = [].slice.call(document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status')).map((e) => e.previousElementSibling);
+    // statusCells.forEach((e) => e.addClass('is-loading'));
+
+    isExecuting = true;
+    waitForExecutionResult();
 }
 
 function saveForLater() {
 
 }
 
-function searchInputList() {
-    inputList.fuzzySearch(this.value);
+function waitForExecutionResult() {
+    if (!isExecuting)
+        return;
+
+    let previousScriptElement = document.querySelector('#executionResult');
+    if (previousScriptElement)
+        document.body.removeChild(previousScriptElement);
+
+    let resultScript = document.createElement('script');
+    resultScript.setAttribute('id', 'executionResult');
+    resultScript.setAttribute('src', 'results/session_id-result.js');
+    resultScript.setAttribute('onload', 'executionResultLoaded();');
+
+    document.body.append(resultScript);
+
+    setTimeout(waitForExecutionResult, 3000);
+}
+
+function executionResultLoaded() {
+    // testing - will be loaded via script
+    executionResult = {
+        timestamp: '123',
+        results: [
+            {
+                id: 1,
+                success: true,
+                desc: ''
+            },
+            {
+                id: 2,
+                success: false,
+                desc: 'error description'
+            }
+        ]
+    };
+
+    isExecuting = false;
+
+    document.querySelectorAll('#' + inputDataTableContainer + ' .is-loading').forEach( (e) => e.removeClass('is-loading').removeClass('pr-4') );
+    document.querySelector('#filterOptionsToggle').children[0].removeAttribute('disabled', '');
+
+    executionResult.results.forEach(item => {
+        let inputListItem = inputList.get('id', item.id)[0];
+        inputListItem._values['status'] = item.success ? 'Success' : 'Error';
+
+        let itemRow = document.querySelector('#' + inputDataTableContainer + ' [data-id="' + item.id + '"]');
+
+        let statusText = itemRow.querySelector('.status');
+        statusText.innerText = item.success ? 'Success' : 'Error';
+
+        let statusIcon = statusText.previousElementSibling;
+        statusIcon.className = item.success ? 'text-success' : 'text-danger';
+    });
 }
 
 /* #endregion */
