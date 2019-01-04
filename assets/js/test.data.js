@@ -35,7 +35,7 @@ var menuJson = {
             ]
         }
     ]
-}
+};
 
 var scriptsArray = [
     {
@@ -56,4 +56,37 @@ var scriptsArray = [
             }
         ]
     }
-]
+];
+
+var userProfiles = [
+    {
+        id: 0,
+        personal: {
+            first_name: 'Ofir',
+            last_name: 'Levi',
+            birthday: '24.01.1993'
+        },
+        nickname: 'ofirl',
+        defaults: {
+            logon: [
+                {
+                    description: 'CRM Dev',
+                    system: 'CKD',
+                    username: 'OFIRL'
+                    
+                },
+                {
+                    description: 'CRM Test',
+                    system: 'CKT',
+                    username: 'OFIRL',
+                    default: true
+                },
+                {
+                    description: 'CRM Prod',
+                    system: 'CKP',
+                    username: 'OFIRL'
+                }
+            ]
+        }
+    }
+];

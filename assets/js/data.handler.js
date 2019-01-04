@@ -49,6 +49,9 @@ var executionResult = {
     // ]
 };
 
+// Profile data
+var currentProfile = userProfiles[0];
+
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 /* #region Helper Functions */
 
@@ -479,6 +482,17 @@ function clearInputTableSearch() {
     searchInputList.call(inputSearch);
 }
 
+function logonDataChanged() {
+    console.log(this.selectedIndex);
+    if (this.selectedIndex != -1) {
+        console.log(this.selectedIndex);
+        let selectedIndex = this.selectedIndex;
+        console.log(currentProfile.defaults.logon[selectedIndex]);
+        document.querySelector('#logonDataSystem').value = currentProfile.defaults.logon[selectedIndex].system;
+        document.querySelector('#logonDataUsername').value = currentProfile.defaults.logon[selectedIndex].username;
+    }
+}
+
 /* #endregion */
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 
@@ -500,6 +514,8 @@ function executeScript(forceRun) {
     }
 
     alert('run script here');
+    
+    // $('#ScriptExecutionAlert').alert();
 
     clearInputTableFilter();
 
@@ -591,6 +607,25 @@ function updateTooltips() {
     $('[data-toggle="tooltip"]').tooltip();
 }
 
+function updatePredefinedConnections() {
+    let selectElement = document.querySelector('#predefinedConnectionsSelect');
+
+    currentProfile.defaults.logon.forEach( function (e, idx) {
+        let option = document.createElement('option');
+        option.innerHTML = e.description;
+        option.setAttribute('value', idx);
+        if (e.default)
+            option.setAttribute('selected', 'selected');
+        selectElement.append(option);
+    } );
+
+    if (selectElement.selectedIndex != '' && selectElement.selectedIndex != -1) {
+        let selectedIndex = selectElement.selectedIndex;
+        document.querySelector('#logonDataSystem').value = currentProfile.defaults.logon[selectedIndex].system;
+        document.querySelector('#logonDataUsername').value = currentProfile.defaults.logon[selectedIndex].username;
+    }
+}
+
 // Init when the script is loaded
 function dataHandlerInit() {
     updateSelectedScript();
@@ -598,6 +633,7 @@ function dataHandlerInit() {
     loadMenusFromFile();
     createInputDataTable();
     updateTooltips();
+    updatePredefinedConnections();
 }
 
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */

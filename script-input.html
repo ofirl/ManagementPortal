@@ -662,6 +662,14 @@
         </div>
     </div>
 
+    <!-- Alert -->
+    <!-- <div id="ScriptExecutionAlert" class="alert alert-info alert-dismissible fade show" role="alert">
+        Executing script
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div> -->
+
     <!-- #endregion -->
 
     <!-- NAVIGATION
@@ -2324,19 +2332,29 @@
                             <!-- Form -->
                             <form class="card-text">
 
+                                <div class="row align-items-center">
+                                    <label class="col-auto">
+                                        Predefined connections :
+                                    </label>
+                                    <div class="col">
+                                        <select id="predefinedConnectionsSelect" class="form-control" data-toggle="select" onchange="logonDataChanged.call(this);">
+                                        </select>
+                                    </div>
+                                </div>
+
                                 <!-- System Name -->
                                 <div class="form-group">
                                     <!-- Label -->
                                     <label>System</label>
                                     <!-- Input -->
-                                    <input type="text" class="form-control" placeholder="system">
+                                    <input id="logonDataSystem" type="text" class="form-control" placeholder="System">
                                 </div>
                                 <!-- System Name -->
                                 <div class="form-group">
                                     <!-- Label -->
                                     <label>Username</label>
                                     <!-- Input -->
-                                    <input type="text" class="form-control" placeholder="system">
+                                    <input id="logonDataUsername" type="text" class="form-control" placeholder="Username">
                                 </div>
 
                             </form>
@@ -2545,6 +2563,7 @@
                 loadMenusFromFile();
                 createInputDataTable();
                 updateTooltips();
+                updatePredefinedConnections();
             }
         </Script>
 
