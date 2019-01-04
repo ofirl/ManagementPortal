@@ -414,6 +414,10 @@ function clearInputData() {
     inputList.clear();
 }
 
+function removeSuccessFromInputList() {
+    inputList.remove('status', 'Success');
+}
+
 function refreshInputTableFilter() {
     filterInputTable(true);
 }
@@ -444,7 +448,6 @@ function filterInputTable(refreshFilter) {
     }
 
     if (currentFilter.length == 0) {
-        document.querySelectorAll('#filterStatusOptions label').forEach( (e) => e.removeClass('active') );
         inputList.filter();
         return;
     }
@@ -461,6 +464,7 @@ function filterInputTable(refreshFilter) {
 }
 
 function clearInputTableFilter() {
+    document.querySelectorAll('#filterStatusOptions label').forEach( (e) => e.removeClass('active') );
     currentFilter = [];
     filterInputTable(true);
 }
@@ -468,6 +472,11 @@ function clearInputTableFilter() {
 function searchInputList() {
     currentSearch = this.value;
     inputList.fuzzySearch(currentSearch);
+}
+
+function clearInputTableSearch() {
+    let inputSearch = this.parentElement.querySelector('input').value = '';
+    searchInputList.call(inputSearch);
 }
 
 /* #endregion */
@@ -490,13 +499,15 @@ function executeScript(forceRun) {
         return;
     }
 
-    alert('run script');
+    alert('run script here');
 
     clearInputTableFilter();
 
     let statusCells = document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status');
     statusCells.forEach( (e) => e.previousElementSibling.addClass('is-loading').addClass('pr-4') );
     statusCells.forEach( (e) => e.innerText = 'Executing' );
+
+    inputList.items.forEach( (item) => item._values['status'] = 'Executing' );
 
     document.querySelector('#filterOptionsToggle').children[0].setAttribute('disabled', '');
     $('#filterStatusOptions').collapse('hide');
