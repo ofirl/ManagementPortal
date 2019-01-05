@@ -517,6 +517,9 @@ function openNewConnectionModal() {
 function addNewConnection() {
     let system = document.querySelector('#newConnectionSystem').value;
     let username = document.querySelector('#newConnectionUsername').value;
+    let defaultConection = document.querySelector('#defaultConnection').checked;
+
+    // TODO : add the new connection
 }
 
 /* #endregion */
