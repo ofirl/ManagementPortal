@@ -429,25 +429,30 @@ function filterInputTable(refreshFilter) {
     refreshFilter = refreshFilter || false;
 
     if (!refreshFilter) {
-        let filterColumn = this.dataset['filtercolumn'];
-        let filterValue = this.dataset['filtervalue'];
+        let filterColumnArray = this.dataset['filtercolumn'].split(',');
+        let filterValueArray = this.dataset['filtervalue'].split(',');
 
-        if (filterValue != '' || filterColumn != '') {
-            let filterObject = {
-                column : filterColumn,
-                value: filterValue
-            };
-            let foundItemIndex = currentFilter.findIndex( (v, i) => v.column == filterColumn && v.value == filterValue );
-            if (foundItemIndex != -1) {
-                currentFilter.splice(foundItemIndex, 1);
+        filterColumnArray.forEach( function (f, idx) {
+            let filterColumn = f;
+            let filterValue = filterValueArray[idx];
+
+            if (filterValue != '' || filterColumn != '') {
+                let filterObject = {
+                    column : filterColumn,
+                    value: filterValue
+                };
+                let foundItemIndex = currentFilter.findIndex( (v, i) => v.column == filterColumn && v.value == filterValue );
+                if (foundItemIndex != -1) {
+                    currentFilter.splice(foundItemIndex, 1);
+                }
+                else {
+                    currentFilter.push(filterObject);
+                }
             }
             else {
-                currentFilter.push(filterObject);
+                currentFilter = [];
             }
-        }
-        else {
-            currentFilter = [];
-        }
+        } );
     }
 
     if (currentFilter.length == 0) {
@@ -458,9 +463,6 @@ function filterInputTable(refreshFilter) {
     inputList.filter(function(item) {
         let itemResult = false;
         return currentFilter.reduce( function (acc, curr, idx, src) {
-            console.log(curr);
-            console.log(item._values);
-            console.log(item._values[curr.column].localeCompare(curr.value));
             return acc || item._values[curr.column].localeCompare(curr.value) == 0;
         }, false);
     });
@@ -493,6 +495,30 @@ function logonDataChanged() {
     }
 }
 
+function copyDataFromClipboard() {
+    // TODO : Needs to be tested on a server
+
+    // navigator.permissions.request({name: 'clipboard-read'}).then( function (response) {
+    //     console.log(response);
+    //     console.log(navigator.permissions.get('clipboard-read'));
+    // });
+
+    // navigator.clipboard.readText().then(
+    //     clipText => console.log(clipText));
+}
+
+function openNewConnectionModal() {
+    $('#newConnectionModal').modal('show');
+
+    document.querySelector('#newConnectionSystem').value = document.querySelector('#logonDataSystem').value;
+    document.querySelector('#newConnectionUsername').value = document.querySelector('#logonDataUsername').value;
+}
+
+function addNewConnection() {
+    let system = document.querySelector('#newConnectionSystem').value;
+    let username = document.querySelector('#newConnectionUsername').value;
+}
+
 /* #endregion */
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 
@@ -520,8 +546,15 @@ function executeScript(forceRun) {
     clearInputTableFilter();
 
     let statusCells = document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status');
-    statusCells.forEach( (e) => e.previousElementSibling.addClass('is-loading').addClass('pr-4') );
-    statusCells.forEach( (e) => e.innerText = 'Executing' );
+    statusCells.forEach( function (e) {
+        e.previousElementSibling.addClass('is-loading').addClass('pr-4');
+        e.innerText = 'Executing';
+    });
+
+    // statusCells.forEach( (e) => e.previousElementSibling.addClass('is-loading').addClass('pr-4') );
+    // statusCells.forEach( (e) => e.innerText = 'Executing' );
+
+    document.querySelectorAll('[data-role="erorr_description"').forEach( (e) => e.parentElement.removeChild(e) );
 
     inputList.items.forEach( (item) => item._values['status'] = 'Executing' );
 
@@ -582,15 +615,29 @@ function executionResultLoaded() {
 
     executionResult.results.forEach(item => {
         let inputListItem = inputList.get('id', item.id)[0];
-        inputListItem._values['status'] = item.success ? 'Success' : 'Error';
+        inputListItem._values['status'] = item.success ? 'Success' : 'Execution Error';
 
         let itemRow = document.querySelector('#' + inputDataTableContainer + ' [data-id="' + item.id + '"]');
 
         let statusText = itemRow.querySelector('.status');
-        statusText.innerText = item.success ? 'Success' : 'Error';
+        statusText.innerText = item.success ? 'Success' : ' Execution Error';
 
         let statusIcon = statusText.previousElementSibling;
         statusIcon.className = item.success ? 'text-success' : 'text-danger';
+
+        
+        if (item.desc != undefined && item.desc != null && item.desc != '') {
+            let statusCell = statusText.parentElement;
+            // let previousError = statusCell.querySelector('[data-role="erorr_description"');
+            // if (previousError != null)
+            //     previousError.parentElement.removeChild(previousError);
+
+            let statusErrorDescription = document.createElement('div');
+            statusErrorDescription.setAttribute('data-role', 'erorr_description');
+            statusErrorDescription.innerHTML = " - " + item.desc;
+
+            statusCell.append(statusErrorDescription);
+        }
     });
 }
 
