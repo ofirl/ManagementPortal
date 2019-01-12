@@ -2321,11 +2321,11 @@
 
         <!-- CARDS -->
         <div class="container-fluid mt--6 pt-4">
-            <div id="historyTableContainer">
+            <div id="historyTableContainer" class="collapse show">
                 <div class="row align-items-center ml-4 mr-4">
                     <div class="col ml-0 pl-0 input-group input-group-flush input-group-merge">
-                        <input type="search" class="form-control form-control-flush form-control-prepended"
-                            placeholder="Search" oninput="searchHistoryList.call(this);">
+                        <input type="search" class="form-control form-control-flush form-control-prepended" placeholder="Search"
+                            oninput="searchHistoryList.call(this);">
                         <div class="input-group-prepend">
                             <div class="input-group-text">
                                 <span class="fe fe-search"></span>
@@ -2337,7 +2337,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class=" align-items-center">
                         <label for="filterScriptsOptions">
                             Filter Scripts :
@@ -2345,14 +2345,12 @@
                     </div>
 
                     <div class="col-2">
-                        <div id="filterScriptsOptions" class="btn-group btn-group-toggle collapse show col"
-                            data-toggle="buttons">
-                            <select class="form-control" data-toggle="select" data-filtercolumn="script-id" multiple onchange="filterHistoryTable.call(this);">
-                                <option value="0">CSS</option>
-                                <option value="1">HTML</option>
-                                <option>JavaScript</option>
-                                <option>Bootstrap</option>
-                                </select>
+                        <div id="filterScriptsOptions" class="btn-group btn-group-toggle col" data-toggle="buttons">
+                            <select id="filterScriptsOptionsSelect" class="form-control" data-toggle="select"
+                                data-filtercolumn="script-id" multiple onchange="filterHistoryTable.call(this);">
+                                <!-- <option value="0">Script 0</option>
+                                <option value="1">Script 1</option> -->
+                            </select>
                         </div>
 
                         <!-- <span id="filterScriptsToggle" class="ml-1" data-toggle="collapse" data-target="#filterScriptsOptions"
@@ -2363,9 +2361,9 @@
                             </button>
                         </span> -->
                     </div>
-      
+
                 </div>
-                <table class="table table-nowrap card-table">
+                <table class="table table-nowrap card-table table-hover2">
                     <thead>
                         <tr>
                             <th class="col-2">
@@ -2388,35 +2386,116 @@
                                     Result
                                 </a>
                             </th>
-                            <th class="col-1 text-center">
+                            <!-- <th class="col-1 text-center">
                                 Actions
-                            </th>
+                            </th> -->
                         </tr>
                     </thead>
                     <tbody class="list">
-                        <tr data-id="0" data-script-id="0">
+                        <tr class="pointer" data-id="0" data-scriptId="0" onclick="expandHistory.call(this);">
                             <td>
                                 <span class="script">
-                                    Add User Mapping
+
                                 </span>
                             </td>
                             <td>
                                 <span class="date">
-                                    1.1.1993
+
                                 </span>
                             </td>
                             <td>
                                 <span class="ran_by">
-                                    Ofir Levi
+
                                 </span>
                             </td>
                             <td class="result">
-                                Success(3)
+
                             </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <span class="fe fe-file-text" onclick="expandHistory.call(this);"> </span>
-                                <!-- <span class="fe fe-copy" onclick="copyRowClick.call(this)"> </span> -->
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- history entry result table -->
+            <div id="historyEntryTableContainer" class="collapse">
+                <button type="button" role="button" class="btn btn-sm btn-white" onclick="historyBack();"> Back </button>
+
+                <div class="row align-items-center ml-4 mr-4">
+                    <div class="col ml-0 pl-0 input-group input-group-flush input-group-merge">
+                        <input type="search" class="form-control form-control-flush form-control-prepended" placeholder="Search"
+                            oninput="searchHistoryEntryList.call(this);">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="fe fe-search"></span>
+                            </div>
+                        </div>
+                        <div class="input-group-append pointer" onclick="clearHistoryEntrySearch.call(this);">
+                            <div class="input-group-text">
+                                <span class="fe fe-delete"> </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <table class="table table-nowrap card-table table-hover2">
+                    <thead>
+                        <tr>
+                            <!-- <th class="col-2">
+                                <a href="#" class="text-muted sort" data-sort="script">
+                                    Script
+                                </a>
+                            </th>
+                            <th class="col-2">
+                                <a href="#" class="text-muted sort" data-sort="date">
+                                    Date
+                                </a>
+                            </th>
+                            <th class="col-1">
+                                <a href="#" class="text-muted sort" data-sort="ran_by">
+                                    Ran By
+                                </a>
+                            </th>
+                            <th class="col-1">
+                                <a href="#!" class="text-muted sort" data-sort="result">
+                                    Result
+                                </a>
+                            </th> -->
+                            <th class="col-1">
+                                <a href="#!" class="text-muted sort" data-sort="status" onclick="updateSorting.call(this);">
+                                    Status
+                                </a>
+                            </th>
+                            <!-- <th class="col-1 text-center">
+                                    Actions
+                                </th> -->
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        <tr class="pointer" data-id="0" data-script-id="0" onclick="expandHistory.call(this);">
+                            <td>
+                                <span class="script">
+
+                                </span>
                             </td>
+                            <td>
+                                <span class="date">
+
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ran_by">
+
+                                </span>
+                            </td>
+                            <td class="result">
+
+                            </td>
+                            <!-- <td class="text-center">
+                                    <span class="fe fe-file-text" onclick="expandHistory.call(this);"> </span>
+                                </td> -->
                         </tr>
                     </tbody>
                 </table>
@@ -2449,6 +2528,7 @@
                 // createInputDataTable();
                 // updateTooltips();
                 loadHistory();
+                updateHistoryScriptDropdown();
             }
         </Script>
 

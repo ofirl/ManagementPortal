@@ -25,10 +25,14 @@ var menuJson = {
                 {
                     name: 'General',
                     href: 'sidebarScriptsGeneral',
+                    badge: 'soft-success',
+                    badgeText: 'New',
                     children: [
                         {
                             name: 'Add User Mapping',
-                            href: 'script-input.html'
+                            href: 'script-input.html?script-id=0',
+                            badge: 'soft-success',
+                            badgeText: 'New',
                         }
                     ]
                 }
@@ -94,7 +98,7 @@ var userProfiles = [
 
 var executionHistory = [
     {
-        id: 1,
+        id: 0,
         script: 0,
         ran_by: 0,
         date: {

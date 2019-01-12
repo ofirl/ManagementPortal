@@ -199,7 +199,14 @@ function loadMenusFromFile() {
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 /* #region Input Data */
 
-function createInputDataTable(tableContainer) {
+function createInputDataTable(list, tableContainer, noActions) {
+    if (list == undefined && list != null) {
+        inputList = null;
+        createInputDataTable(inputList, tableContainer, noActions);
+        return;
+    }
+    noActions = noActions || false;
+
     if (!tableContainer)
         tableContainer = document.querySelector('#' + inputDataTableContainer);
 
@@ -244,28 +251,42 @@ function createInputDataTable(tableContainer) {
     tableContainer.parentElement.addClass('col-' + totalWidth);
 
     // add one new empty row
-    addNewRow(document.querySelector('#' + inputDataTableContainer));
+    addNewRow(null, tableContainer, noActions);
 
     // Init list
-    inputList = new List(inputDataTableContainer, inputListOptions);
-    inputList.remove('id', 0);
-    addNewRow(document.querySelector('#' + inputDataTableContainer));
+    list = new List(tableContainer.id, inputListOptions);
+    list.clear();
+    // addNewRow(list, tableContainer, noActions);
 
-    applySorting(inputList, currentSort = { column: inputList.valueNames[2].name, order: 'asc' });
+    applySorting(list, currentSort = { column: list.valueNames[2].name, order: 'asc' });
 }
 
 function addNewRowClick() {
-    addNewRow(document.querySelector(this.dataset.target));
+    addNewRow(inputList, document.querySelector(this.dataset.target));
 }
 
-function addNewRow(table) {
-    if (inputList) {
-        inputList.add({
-            'card-name': '',
-            'username': '',
-            'status': 'Error',
-            'id': getNextInputListItemId()
-        });
+function addNewRow(list, table, noActions) {
+    if (list == undefined)
+        list = inputList;
+
+    noActions = noActions || false;
+
+    if (list) {
+        console.log(list);
+        let listItem = list.valueNames.reduce(function (acc, cur) {
+            if (cur.data)
+                acc[cur.data[0]] = '';
+            else if (cur.name)
+                acc[cur.name] = '';
+            else
+                acc[cur] = '';
+
+            return acc;
+        }, false);
+        
+        listItem.id = getNextInputListItemId();
+
+        list.add(listItem);
         $(table.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
         updateStatus(table.querySelector('tbody').lastElementChild);
         return;
@@ -289,11 +310,15 @@ function addNewRow(table) {
     });
 
     row.innerHTML += '<td> <span data-role="icon" class="text-warning">●</span> <span class="status"' +
-        'data-toggle="tooltip" data-html="true" title=""> Pending </span> </td>' +
-        '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"' +
-        'data-toggle="tooltip" data-placement="top" data-html="true" title="Delete row"> </span>' +
-        '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)" data-toggle="tooltip"' +
-        'data-placement="top" data-html="true" title="Copy row"> </span> </td> </tr>';
+        'data-toggle="tooltip" data-html="true" title=""> Pending </span> </td>';
+
+    if (!noActions) {
+        row.innerHTML +=
+            '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"' +
+            'data-toggle="tooltip" data-placement="top" data-html="true" title="Delete row"> </span>' +
+            '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)" data-toggle="tooltip"' +
+            'data-placement="top" data-html="true" title="Copy row"> </span> </td> </tr>';
+    }
 
     inputListItem['status'] = 'Warning';
 
@@ -668,8 +693,35 @@ function executionResultLoaded() {
 var historyList;
 var historyOptions;
 
+var historyEntryList;
+
 function expandHistory() {
     // TODO
+    // console.log('expand history ' + this.dataset.id);
+    selectedScriptIndex = this.dataset['scriptid'];
+    console.log(selectedScriptIndex);
+    currentScript = scriptsArray[selectedScriptIndex];
+
+    document.querySelector('#historyEntryTableContainer').querySelector('tbody').innerHTML = '';
+
+    createInputDataTable(historyList, document.querySelector('#historyEntryTableContainer'));
+
+    toggleHistoryTables();
+}
+
+function historyBack() {
+    let historyEntryTable = document.querySelector('#historyEntryTableContainer').querySelector('table');
+    let historyEntryTableHeaderRow = historyEntryTable.querySelector('table thead tr');
+    if (historyEntryTableHeaderRow.children.length > 1) {
+        historyEntryTableHeaderRow.remove(historyEntryTableHeaderRow.firstElementChild);
+    }
+
+    toggleHistoryTables();
+}
+
+function toggleHistoryTables() {
+    $('#historyEntryTableContainer').collapse('toggle');
+    $('#historyTableContainer').collapse('toggle');
 }
 
 function loadHistory() {
@@ -677,7 +729,7 @@ function loadHistory() {
     historyOptions = {
         valueNames: [
             // { data: ['id'] },
-            { data: ['id', 'script-id'] },
+            { data: ['id', 'scriptid'] },
             // { data: ['script-id'] },
             'script',
             'date',
@@ -689,15 +741,17 @@ function loadHistory() {
     historyList = new List('historyTableContainer', historyOptions);
     historyList.clear();
     executionHistory.forEach(function (i) {
+        let resultSuccess = i.results.filter( (item) => item.success).length;
+        let resultPercentage = resultSuccess / i.results.length * 100;
         let historyEntry = {
-            'id': getNextInputListItemId(),
-            'script-id': i.script,
+            'id': i.id,
+            'scriptid': i.script,
             'script': scriptsArray[i.script].name,
-            'date': i.date.day + '/' + i.date.month + '/' + i.date.year,
+            'date': `${i.date.day}/${i.date.month}/${i.date.year}`,
             'ran-by': userProfiles[i.ran_by].fullName(),
-            'result': ''
+            'result': `${resultSuccess}/${i.results.length} (${resultPercentage}%)`
         };
-        console.log(historyEntry);
+
         historyList.add(historyEntry);
     });
 }
@@ -764,7 +818,17 @@ function filterHistoryTable(refreshFilter) {
 }
 
 function updateHistoryScriptDropdown() {
-    // TODO
+    let scriptSelect = document.querySelector('#filterScriptsOptionsSelect');
+    scriptsArray.forEach( function (s) {
+        let option = document.createElement('option');
+        option.setAttribute('value', s.id);
+        option.innerHTML = s.name;
+        scriptSelect.append(option);
+    });
+}
+
+function searchHistoryEntryList() {
+    searchList(historyEntryList, this.value);
 }
 
 /* #endregion */
@@ -773,7 +837,11 @@ function updateHistoryScriptDropdown() {
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
 
 function updateSelectedScript() {
-    currentScript = scriptsArray[selectedScriptIndex];
+    let url_string = window.location.href;
+    let url = new URL(url_string);
+    let scriptId = url.searchParams.get('script-id');
+
+    currentScript = scriptsArray[scriptId];
 }
 
 function updateTooltips() {
