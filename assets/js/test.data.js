@@ -39,6 +39,7 @@ var menuJson = {
 
 var scriptsArray = [
     {
+        id: 0,
         name: 'Add User Mapping',
         description: 'Adds a mapping for the user in table "vusrextid"',
         inputs: [
@@ -88,5 +89,76 @@ var userProfiles = [
                 }
             ]
         }
+    }
+];
+
+var executionHistory = [
+    {
+        id: 1,
+        script: 0,
+        ran_by: 0,
+        date: {
+            day: 1,
+            month: 4,
+            year: 2018
+        },
+        inputs: [
+            {
+                id: 0,
+                'card-name': 's7546559',
+                username: 'ofirl'
+            },
+            {
+                id: 1,
+                'card-name': 's7546559',
+                username: 'ofirl2'
+            }
+        ],
+        results: [
+            {
+                id: 0,
+                success: true,
+                desc: ''
+            },
+            {
+                id: 1,
+                success: false,
+                desc: 'error description'
+            }
+        ]
+    },
+    {
+        id: 1,
+        script: 0,
+        ran_by: 0,
+        date: {
+            day: 1,
+            month: 5,
+            year: 2018
+        },
+        inputs: [
+            {
+                id: 0,
+                'card-name': 's7546559',
+                username: 'ofirl'
+            },
+            {
+                id: 1,
+                'card-name': 's7546559',
+                username: 'ofirl2'
+            }
+        ],
+        results: [
+            {
+                id: 0,
+                success: true,
+                desc: ''
+            },
+            {
+                id: 1,
+                success: false,
+                desc: 'error description'
+            }
+        ]
     }
 ];

@@ -85,6 +85,21 @@ function isElement(o) {
     );
 }
 
+if (userProfiles) {
+    userProfiles.forEach((p) => p.fullName = function () {
+        return this.personal.first_name + ' ' + this.personal.last_name;
+    });
+}
+
+function searchList(list, value, isNotFuzzy) {
+    isNotFuzzy = isNotFuzzy || false;
+    currentSearch = value;
+    if (isNotFuzzy)
+        list.search(value)
+    else
+        list.fuzzySearch(currentSearch);
+}
+
 /* #endregion */
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 
@@ -432,16 +447,16 @@ function filterInputTable(refreshFilter) {
         let filterColumnArray = this.dataset['filtercolumn'].split(',');
         let filterValueArray = this.dataset['filtervalue'].split(',');
 
-        filterColumnArray.forEach( function (f, idx) {
+        filterColumnArray.forEach(function (f, idx) {
             let filterColumn = f;
             let filterValue = filterValueArray[idx];
 
             if (filterValue != '' || filterColumn != '') {
                 let filterObject = {
-                    column : filterColumn,
+                    column: filterColumn,
                     value: filterValue
                 };
-                let foundItemIndex = currentFilter.findIndex( (v, i) => v.column == filterColumn && v.value == filterValue );
+                let foundItemIndex = currentFilter.findIndex((v, i) => v.column == filterColumn && v.value == filterValue);
                 if (foundItemIndex != -1) {
                     currentFilter.splice(foundItemIndex, 1);
                 }
@@ -452,7 +467,7 @@ function filterInputTable(refreshFilter) {
             else {
                 currentFilter = [];
             }
-        } );
+        });
     }
 
     if (currentFilter.length == 0) {
@@ -460,16 +475,16 @@ function filterInputTable(refreshFilter) {
         return;
     }
 
-    inputList.filter(function(item) {
+    inputList.filter(function (item) {
         let itemResult = false;
-        return currentFilter.reduce( function (acc, curr, idx, src) {
+        return currentFilter.reduce(function (acc, curr, idx, src) {
             return acc || item._values[curr.column].localeCompare(curr.value) == 0;
         }, false);
     });
 }
 
 function clearInputTableFilter() {
-    document.querySelectorAll('#filterStatusOptions label').forEach( (e) => e.removeClass('active') );
+    document.querySelectorAll('#filterStatusOptions label').forEach((e) => e.removeClass('active'));
     currentFilter = [];
     filterInputTable(true);
 }
@@ -543,13 +558,13 @@ function executeScript(forceRun) {
     }
 
     alert('run script here');
-    
+
     // $('#ScriptExecutionAlert').alert();
 
     clearInputTableFilter();
 
     let statusCells = document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status');
-    statusCells.forEach( function (e) {
+    statusCells.forEach(function (e) {
         e.previousElementSibling.addClass('is-loading').addClass('pr-4');
         e.innerText = 'Executing';
     });
@@ -557,9 +572,9 @@ function executeScript(forceRun) {
     // statusCells.forEach( (e) => e.previousElementSibling.addClass('is-loading').addClass('pr-4') );
     // statusCells.forEach( (e) => e.innerText = 'Executing' );
 
-    document.querySelectorAll('[data-role="erorr_description"').forEach( (e) => e.parentElement.removeChild(e) );
+    document.querySelectorAll('[data-role="erorr_description"').forEach((e) => e.parentElement.removeChild(e));
 
-    inputList.items.forEach( (item) => item._values['status'] = 'Executing' );
+    inputList.items.forEach((item) => item._values['status'] = 'Executing');
 
     document.querySelector('#filterOptionsToggle').children[0].setAttribute('disabled', '');
     $('#filterStatusOptions').collapse('hide');
@@ -613,7 +628,7 @@ function executionResultLoaded() {
 
     isExecuting = false;
 
-    document.querySelectorAll('#' + inputDataTableContainer + ' .is-loading').forEach( (e) => e.removeClass('is-loading').removeClass('pr-4') );
+    document.querySelectorAll('#' + inputDataTableContainer + ' .is-loading').forEach((e) => e.removeClass('is-loading').removeClass('pr-4'));
     document.querySelector('#filterOptionsToggle').children[0].removeAttribute('disabled', '');
 
     executionResult.results.forEach(item => {
@@ -628,7 +643,7 @@ function executionResultLoaded() {
         let statusIcon = statusText.previousElementSibling;
         statusIcon.className = item.success ? 'text-success' : 'text-danger';
 
-        
+
         if (item.desc != undefined && item.desc != null && item.desc != '') {
             let statusCell = statusText.parentElement;
             // let previousError = statusCell.querySelector('[data-role="erorr_description"');
@@ -647,6 +662,114 @@ function executionResultLoaded() {
 /* #endregion */
 /* Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute */
 
+/* History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History */
+/* #region History */
+
+var historyList;
+var historyOptions;
+
+function expandHistory() {
+    // TODO
+}
+
+function loadHistory() {
+    let historyTableContainer = document.querySelector('#historyTableContainer');
+    historyOptions = {
+        valueNames: [
+            // { data: ['id'] },
+            { data: ['id', 'script-id'] },
+            // { data: ['script-id'] },
+            'script',
+            'date',
+            'ran-by',
+            'result'
+        ]
+    };
+
+    historyList = new List('historyTableContainer', historyOptions);
+    historyList.clear();
+    executionHistory.forEach(function (i) {
+        let historyEntry = {
+            'id': getNextInputListItemId(),
+            'script-id': i.script,
+            'script': scriptsArray[i.script].name,
+            'date': i.date.day + '/' + i.date.month + '/' + i.date.year,
+            'ran-by': userProfiles[i.ran_by].fullName(),
+            'result': ''
+        };
+        console.log(historyEntry);
+        historyList.add(historyEntry);
+    });
+}
+
+function searchHistoryList() {
+    searchList(historyList, this.value);
+}
+
+function clearHistorySearch() {
+    let historySearch = this.parentElement.querySelector('input').value = '';
+    searchHistoryList.call(historySearch);
+}
+
+function filterHistoryTable(refreshFilter) {
+    refreshFilter = refreshFilter || false;
+
+    if (!refreshFilter) {
+        let filterColumnArray = this.dataset['filtercolumn'].split(',');
+        // let filterValueArray = this.dataset['filtervalue'].split(',');
+        let filterValueArray = $(this).val();
+
+        if (filterValueArray.length != 0) {
+            filterColumnArray.forEach(function (f, idx) {
+                let filterColumn = f;
+                let filterValue = filterValueArray[idx];
+
+                if (filterValue != '' || filterColumn != '') {
+                    console.log(filterValue);
+                    let filterObject = {
+                        column: filterColumn,
+                        value: filterValue
+                    };
+                    let foundItemIndex = currentFilter.findIndex((v, i) => v.column == filterColumn && v.value == filterValue);
+                    if (foundItemIndex != -1) {
+                        currentFilter.splice(foundItemIndex, 1);
+                    }
+                    else {
+                        currentFilter.push(filterObject);
+                    }
+                }
+                else {
+                    currentFilter = [];
+                }
+            });
+        }
+        else {
+            currentFilter = [];
+        }
+    }
+
+    console.log(currentFilter);
+
+    if (currentFilter.length == 0) {
+        historyList.filter();
+        return;
+    }
+
+    historyList.filter(function (item) {
+        let itemResult = false;
+        return currentFilter.reduce(function (acc, curr, idx, src) {
+            return acc || item._values[curr.column] == curr.value;
+        }, false);
+    });
+}
+
+function updateHistoryScriptDropdown() {
+    // TODO
+}
+
+/* #endregion */
+/* History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History */
+
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
 
 function updateSelectedScript() {
@@ -660,14 +783,14 @@ function updateTooltips() {
 function updatePredefinedConnections() {
     let selectElement = document.querySelector('#predefinedConnectionsSelect');
 
-    currentProfile.defaults.logon.forEach( function (e, idx) {
+    currentProfile.defaults.logon.forEach(function (e, idx) {
         let option = document.createElement('option');
         option.innerHTML = e.description;
         option.setAttribute('value', idx);
         if (e.default)
             option.setAttribute('selected', 'selected');
         selectElement.append(option);
-    } );
+    });
 
     if (selectElement.selectedIndex != '' && selectElement.selectedIndex != -1) {
         let selectedIndex = selectElement.selectedIndex;
