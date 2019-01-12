@@ -248,7 +248,7 @@ function createInputDataTable(list, tableContainer, noActions) {
     });
 
     // total card width
-    tableContainer.parentElement.addClass('col-' + totalWidth);
+    // tableContainer.parentElement.addClass('col-' + totalWidth);
 
     // add one new empty row
     addNewRow(null, tableContainer, noActions);
@@ -693,35 +693,55 @@ function executionResultLoaded() {
 var historyList;
 var historyOptions;
 
-var historyEntryList;
+var historyEntryResultList;
 
 function expandHistory() {
     // TODO
     // console.log('expand history ' + this.dataset.id);
     selectedScriptIndex = this.dataset['scriptid'];
-    console.log(selectedScriptIndex);
+    // console.log(selectedScriptIndex);
     currentScript = scriptsArray[selectedScriptIndex];
 
     document.querySelector('#historyEntryTableContainer').querySelector('tbody').innerHTML = '';
 
-    createInputDataTable(historyList, document.querySelector('#historyEntryTableContainer'));
+    historyEntryResultList = null;
+    createInputDataTable(historyEntryResultList, document.querySelector('#historyEntryTableContainer'));
 
+    loadHistoryEntryResults(this.dataset.id);
     toggleHistoryTables();
 }
 
 function historyBack() {
     let historyEntryTable = document.querySelector('#historyEntryTableContainer').querySelector('table');
     let historyEntryTableHeaderRow = historyEntryTable.querySelector('table thead tr');
-    if (historyEntryTableHeaderRow.children.length > 1) {
-        historyEntryTableHeaderRow.remove(historyEntryTableHeaderRow.firstElementChild);
+    while (historyEntryTableHeaderRow.children.length > 1) {
+        historyEntryTableHeaderRow.removeChild(historyEntryTableHeaderRow.firstElementChild);
     }
 
     toggleHistoryTables();
 }
 
 function toggleHistoryTables() {
+    loadHistoryEntryResults();
+
     $('#historyEntryTableContainer').collapse('toggle');
     $('#historyTableContainer').collapse('toggle');
+}
+
+function loadHistoryEntryResults(entryId) {
+    if (entryId == undefined || entryId == null)
+        return;
+    
+    let entry = executionHistory.find( (e) => e.id == entryId);
+    entry.inputs.forEach( function (i) {
+        let historyResultEntry = Object.keys(i).reduce( function (acc, key) {
+            acc[key] = i[key];
+            return acc;
+        }, {});
+        historyResultEntry.status = entry.results.find((r) => r.id == i.id).success ? 'Success' : 'Error';
+
+        historyEntryResultList.add(historyResultEntry);
+    });
 }
 
 function loadHistory() {
@@ -732,8 +752,8 @@ function loadHistory() {
             { data: ['id', 'scriptid'] },
             // { data: ['script-id'] },
             'script',
-            'date',
-            'ran-by',
+            'timestamp',
+            'ran_by',
             'result'
         ]
     };
@@ -747,8 +767,8 @@ function loadHistory() {
             'id': i.id,
             'scriptid': i.script,
             'script': scriptsArray[i.script].name,
-            'date': `${i.date.day}/${i.date.month}/${i.date.year}`,
-            'ran-by': userProfiles[i.ran_by].fullName(),
+            'timestamp': `${i.timestamp.day}/${i.timestamp.month}/${i.timestamp.year} ${i.timestamp.hour}:${i.timestamp.minute}`,
+            'ran_by': userProfiles[i.ran_by].fullName(),
             'result': `${resultSuccess}/${i.results.length} (${resultPercentage}%)`
         };
 
@@ -828,7 +848,12 @@ function updateHistoryScriptDropdown() {
 }
 
 function searchHistoryEntryList() {
-    searchList(historyEntryList, this.value);
+    searchList(historyEntryResultList, this.value);
+}
+
+function clearHistoryEntrySearch() {
+    let historySearch = this.parentElement.querySelector('input').value = '';
+    searchHistoryEntryList.call(historySearch);
 }
 
 /* #endregion */

@@ -101,10 +101,12 @@ var executionHistory = [
         id: 0,
         script: 0,
         ran_by: 0,
-        date: {
+        timestamp: {
             day: 1,
             month: 4,
-            year: 2018
+            year: 2018,
+            hour: 18,
+            minute: 23
         },
         inputs: [
             {
@@ -135,10 +137,12 @@ var executionHistory = [
         id: 1,
         script: 0,
         ran_by: 0,
-        date: {
+        timestamp: {
             day: 1,
             month: 5,
-            year: 2018
+            year: 2018,
+            hour: 10,
+            minute: 34
         },
         inputs: [
             {
