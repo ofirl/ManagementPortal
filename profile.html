@@ -2261,12 +2261,12 @@
             <div class="col mb-3 ml--3 ml-md--2">
 
               <!-- Pretitle -->
-              <h6 class="header-pretitle">
+              <h6 id="profileNickname" class="header-pretitle">
                 Members
               </h6>
 
               <!-- Title -->
-              <h1 class="header-title">
+              <h1 id="profileName" class="header-title">
                 Ofir Levi
               </h1>
 
@@ -2570,6 +2570,7 @@
 
     <Script type="text/javascript">
       function init() {
+        updateCurrentProfile();
         // updateSelectedScript();
         // changeTitles();
         loadMenusFromFile();

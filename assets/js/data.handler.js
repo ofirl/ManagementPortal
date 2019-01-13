@@ -50,7 +50,7 @@ var executionResult = {
 };
 
 // Profile data
-var currentProfile = userProfiles[0];
+var currentProfile;
 
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 /* #region Helper Functions */
@@ -85,11 +85,11 @@ function isElement(o) {
     );
 }
 
-if (userProfiles) {
-    userProfiles.forEach((p) => p.fullName = function () {
-        return this.personal.first_name + ' ' + this.personal.last_name;
-    });
-}
+// if (userProfiles) {
+//     userProfiles.forEach((p) => p.fullName = function () {
+//         return this.personal.first_name + ' ' + this.personal.last_name;
+//     });
+// }
 
 function searchList(list, value, isNotFuzzy) {
     isNotFuzzy = isNotFuzzy || false;
@@ -97,7 +97,7 @@ function searchList(list, value, isNotFuzzy) {
     if (isNotFuzzy)
         list.search(value)
     else
-        list.fuzzySearch(currentSearch);
+        list.fuzzySearch(value);
 }
 
 /* #endregion */
@@ -199,13 +199,13 @@ function loadMenusFromFile() {
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 /* #region Input Data */
 
-function createInputDataTable(list, tableContainer, noActions) {
+function createInputDataTable(list, tableContainer, noActions, isLabel, additionalColumns) {
     if (list == undefined && list != null) {
         inputList = null;
-        createInputDataTable(inputList, tableContainer, noActions);
-        return;
+        return createInputDataTable(inputList, tableContainer, noActions);
     }
     noActions = noActions || false;
+    isLabel = isLabel || false;
 
     if (!tableContainer)
         tableContainer = document.querySelector('#' + inputDataTableContainer);
@@ -221,7 +221,7 @@ function createInputDataTable(list, tableContainer, noActions) {
     // table header cells
     let totalWidth = 2;
     let headerRow = tableContainer.querySelector('thead tr');
-    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
+    scriptsArray[selectedScriptIndex].inputs.concat(additionalColumns).forEach(input => {
         let headerCell = document.createElement('th');
         headerCell.addClass('col-' + input.width);
         totalWidth += input.width;
@@ -240,10 +240,17 @@ function createInputDataTable(list, tableContainer, noActions) {
         // headerCell.append(headerCellLink);
         headerRow.insertBefore(headerCell, headerRow.querySelector('[data-sort=status]').parentElement);
 
-        let inputOption = {
-            name: input.name.replace(' ', '-'),
-            attr: 'value'
-        };
+        let inputOption;
+        if (!isLabel) {
+            inputOption = {
+                name: input.name.replace(' ', '-'),
+                attr: 'value'
+            };
+        }
+        else {
+            inputOption = input.name.replace(' ', '-');
+        }
+
         inputListOptions.valueNames.push(inputOption);
     });
 
@@ -251,28 +258,32 @@ function createInputDataTable(list, tableContainer, noActions) {
     // tableContainer.parentElement.addClass('col-' + totalWidth);
 
     // add one new empty row
-    addNewRow(null, tableContainer, noActions);
+    addNewRow(null, tableContainer, noActions, isLabel, additionalColumns);
 
     // Init list
     list = new List(tableContainer.id, inputListOptions);
     list.clear();
     // addNewRow(list, tableContainer, noActions);
 
-    applySorting(list, currentSort = { column: list.valueNames[2].name, order: 'asc' });
+    // applySorting(list, currentSort = { column: list.valueNames[2].name, order: 'asc' });
+
+    return list;
 }
 
 function addNewRowClick() {
     addNewRow(inputList, document.querySelector(this.dataset.target));
 }
 
-function addNewRow(list, table, noActions) {
+function addNewRow(list, table, noActions, isLabel, additionalColumns) {
     if (list == undefined)
         list = inputList;
 
+    isLabel = isLabel || false;
+    additionalColumns = additionalColumns || [];
     noActions = noActions || false;
 
     if (list) {
-        console.log(list);
+        // console.log(list);
         let listItem = list.valueNames.reduce(function (acc, cur) {
             if (cur.data)
                 acc[cur.data[0]] = '';
@@ -282,7 +293,7 @@ function addNewRow(list, table, noActions) {
                 acc[cur] = '';
 
             return acc;
-        }, false);
+        }, {});
         
         listItem.id = getNextInputListItemId();
 
@@ -297,15 +308,19 @@ function addNewRow(list, table, noActions) {
     let rowId = getNextInputListItemId();
     row.setAttribute('data-id', rowId);
     row.setAttribute('id', rowId);
-    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
+    scriptsArray[selectedScriptIndex].inputs.concat(additionalColumns).forEach(input => {
         let cellClass = input.name.replace(' ', '-');
         let cellInputType = input.type;
         let cellPlaceHolder = input.name;
 
-        row.innerHTML += '<td>' +
-            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 bw-flush-1 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' +
-            'oninput="inputDataChanged.call(this);"> </td>';
-
+        if (!isLabel) {
+            row.innerHTML += '<td>' +
+                '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 bw-flush-1 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' +
+                'oninput="inputDataChanged.call(this);"> </td>';
+        }
+        else {
+            row.innerHTML += `<td> <span class="${cellClass}"> </span> </td>`;
+        }
         inputListItem[input.name.replace(' ', '-')] = '';
     });
 
@@ -317,8 +332,10 @@ function addNewRow(list, table, noActions) {
             '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"' +
             'data-toggle="tooltip" data-placement="top" data-html="true" title="Delete row"> </span>' +
             '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)" data-toggle="tooltip"' +
-            'data-placement="top" data-html="true" title="Copy row"> </span> </td> </tr>';
+            'data-placement="top" data-html="true" title="Copy row"> </span> </td>';
     }
+
+    row.innerHTML += '</tr>';
 
     inputListItem['status'] = 'Warning';
 
@@ -411,7 +428,7 @@ function applySorting(list, sort) {
 
 function updateStatus(row) {
     let tooltipTitle = [];
-    let statusCell = row.lastElementChild.previousElementSibling;
+    let statusCell = row.querySelector('.status').parentElement;
     let statusText = statusCell.querySelector('.status');
     let statusIcon = statusCell.querySelector('[data-role="icon"]');
     let error = false;
@@ -705,7 +722,7 @@ function expandHistory() {
     document.querySelector('#historyEntryTableContainer').querySelector('tbody').innerHTML = '';
 
     historyEntryResultList = null;
-    createInputDataTable(historyEntryResultList, document.querySelector('#historyEntryTableContainer'));
+    historyEntryResultList = createInputDataTable(historyEntryResultList, document.querySelector('#historyEntryTableContainer'), true, true, [{name: 'description', width: 2}]);
 
     loadHistoryEntryResults(this.dataset.id);
     toggleHistoryTables();
@@ -739,8 +756,13 @@ function loadHistoryEntryResults(entryId) {
             return acc;
         }, {});
         historyResultEntry.status = entry.results.find((r) => r.id == i.id).success ? 'Success' : 'Error';
+        historyResultEntry.description = entry.results.find((r) => r.id == i.id).desc;
 
         historyEntryResultList.add(historyResultEntry);
+    });
+
+    historyEntryResultList.listContainer.querySelectorAll('.status').forEach( function (e) {
+        e.previousElementSibling.className = e.innerHTML == 'Error' ? 'text-danger' : 'text-success';
     });
 }
 
@@ -859,6 +881,22 @@ function clearHistoryEntrySearch() {
 /* #endregion */
 /* History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History */
 
+/* Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile */
+/* #region Profile */
+
+function updateProfileName() {
+    let profileNickname = document.querySelector('#profileNickname');
+    if (profileNickname)
+        profileNickname.innerHTML = currentProfile.nickname;
+
+    let profileName = document.querySelector('#profileName');    
+    if (profileName)
+        profileName.innerHTML = currentProfile.fullName();
+}
+
+/* #endregion */
+/* Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile */
+
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
 
 function updateSelectedScript() {
@@ -867,6 +905,11 @@ function updateSelectedScript() {
     let scriptId = url.searchParams.get('script-id');
 
     currentScript = scriptsArray[scriptId];
+}
+
+function updateCurrentProfile() {
+    currentProfile = userProfiles[0];
+    updateProfileName();
 }
 
 function updateTooltips() {

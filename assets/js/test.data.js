@@ -71,6 +71,9 @@ var userProfiles = [
             last_name: 'Levi',
             birthday: '24.01.1993'
         },
+        fullName: function () {
+            return this.personal.first_name + ' ' + this.personal.last_name;
+        },
         nickname: 'ofirl',
         defaults: {
             logon: [
@@ -116,7 +119,7 @@ var executionHistory = [
             },
             {
                 id: 1,
-                'card-name': 's7546559',
+                'card-name': 's7548959',
                 username: 'ofirl2'
             }
         ],
@@ -129,7 +132,7 @@ var executionHistory = [
             {
                 id: 1,
                 success: false,
-                desc: 'error description'
+                desc: 'error!!!!!'
             }
         ]
     },
@@ -147,19 +150,19 @@ var executionHistory = [
         inputs: [
             {
                 id: 0,
-                'card-name': 's7546559',
-                username: 'ofirl'
+                'card-name': 's75345559',
+                username: 'ofirl2'
             },
             {
                 id: 1,
-                'card-name': 's7546559',
-                username: 'ofirl2'
+                'card-name': 's7548659',
+                username: 'ofirl'
             }
         ],
         results: [
             {
                 id: 0,
-                success: true,
+                success: false,
                 desc: ''
             },
             {

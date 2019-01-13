@@ -2272,12 +2272,12 @@
                         <div class="col mb-3 ml--3 ml-md--2">
 
                             <!-- Pretitle -->
-                            <h6 class="header-pretitle">
+                            <h6 id="profileNickname" class="header-pretitle">
                                 Members
                             </h6>
 
                             <!-- Title -->
-                            <h1 class="header-title">
+                            <h1 id="profileName" class="header-title">
                                 Ofir Levi
                             </h1>
 
@@ -2340,14 +2340,14 @@
 
                     <div class=" align-items-center">
                         <label for="filterScriptsOptions">
-                            Filter Scripts :
+                            Scripts Filter :
                         </label>
                     </div>
 
-                    <div class="col-2">
+                    <div class="col-3">
                         <div id="filterScriptsOptions" class="btn-group btn-group-toggle col" data-toggle="buttons">
                             <select id="filterScriptsOptionsSelect" class="form-control" data-toggle="select"
-                                data-filtercolumn="script-id" multiple onchange="filterHistoryTable.call(this);">
+                                data-filtercolumn="scriptid" multiple onchange="filterHistoryTable.call(this);">
                                 <!-- <option value="0">Script 0</option>
                                 <option value="1">Script 1</option> -->
                             </select>
@@ -2468,9 +2468,11 @@
                                     Status
                                 </a>
                             </th>
-                            <!-- <th class="col-1 text-center">
-                                    Actions
-                                </th> -->
+                            <!-- <th class="col-auto">
+                                <a href="#!" class="text-muted sort" data-sort="description">
+                                    Description
+                                </a>
+                            </th> -->
                         </tr>
                     </thead>
                     <tbody class="list">
@@ -2522,6 +2524,7 @@
 
         <Script type="text/javascript">
             function init() {
+                updateCurrentProfile();
                 // updateSelectedScript();
                 // changeTitles();
                 loadMenusFromFile();
