@@ -2280,10 +2280,10 @@
             </div> -->
           </div> <!-- / .row -->
           <div class="row align-items-center">
-            <div class="col">
+            <div id="profileHeaderNavigation" class="col">
 
               <!-- Nav -->
-              <ul class="nav nav-tabs nav-overflow header-tabs">
+              <!-- <ul class="nav nav-tabs nav-overflow header-tabs">
                 <li class="nav-item">
                   <a href="profile.html" class="nav-link active">
                     Profile
@@ -2296,10 +2296,10 @@
                 </li>
                 <li class="nav-item">
                   <a href="history.html" class="nav-link">
-                    History
+                    Execution History
                   </a>
                 </li>
-              </ul>
+              </ul> -->
 
             </div>
           </div>
@@ -2570,6 +2570,7 @@
 
     <Script type="text/javascript">
       function init() {
+        setProfileHeaderNavigation(0);
         updateCurrentProfile();
         // updateSelectedScript();
         // changeTitles();

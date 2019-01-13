@@ -894,6 +894,17 @@ function updateProfileName() {
         profileName.innerHTML = currentProfile.fullName();
 }
 
+function setProfileHeaderNavigation(activeIndex) {
+    let profileNavigationContainer = document.querySelector('#profileHeaderNavigation');
+    profileNavigationContainer.innerHTML += '<ul class="nav nav-tabs nav-overflow header-tabs">' +
+        '<li class="nav-item"> <a href="profile.html" class="nav-link"> Profile </a> </li>' +
+        '<li class="nav-item"> <a href="under-construction.html" class="nav-link"> Defaults </a> </li>' +
+        '<li class="nav-item"> <a href="history.html" class="nav-link"> Execution History </a> </li>' +
+        '</ul>';
+    
+        profileNavigationContainer.querySelector('ul').children[activeIndex].children[0].addClass('active');
+}
+
 /* #endregion */
 /* Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile */
 
