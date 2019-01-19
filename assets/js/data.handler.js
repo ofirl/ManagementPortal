@@ -729,6 +729,8 @@ function expandHistory() {
     historyEntryResultList = null;
     historyEntryResultList = createInputDataTable(historyEntryResultList, document.querySelector('#historyEntryTableContainer'), true, true, [{name: 'description', width: 2}]);
 
+    clearHistoryEntrySearch.call(document.querySelector('#historyEntrySearchInput'));
+
     loadHistoryEntryResults(this.dataset.id);
     toggleHistoryTables();
 }
