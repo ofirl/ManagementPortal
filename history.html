@@ -71,7 +71,8 @@
                     <div class="btn-group-toggle d-flex mb-4" data-toggle="buttons">
                         <label class="btn btn-white active col">
                             <input type="radio" name="colorScheme" id="colorSchemeLight" value="light" checked> <i
-                                class="fe fe-sun mr-2"></i> Light Mode
+                                class="fe fe-sun mr-2"></i>
+                            Light Mode
                         </label>
                         <label class="btn btn-white col ml-2">
                             <input type="radio" name="colorScheme" id="colorSchemeDark" value="dark"> <i class="fe fe-moon mr-2"></i>
@@ -582,7 +583,8 @@
                                     <!-- Content -->
                                     <div class="small text-muted">
                                         <strong class="text-body">Ofir Levi</strong> published a new feature, <strong
-                                            class="text-body">History logs</strong>, for better management and keeping
+                                            class="text-body">History
+                                            logs</strong>, for better management and keeping
                                         track of stuff.
                                     </div>
 
@@ -661,72 +663,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal: Add new Connection -->
-    <div class="modal fade" id="newConnectionModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3 class="modal-title" id="newConnectionModalLabel"> New Connection </h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container-fluid">
-                            <div class="form-group">
-                                <!-- Label -->
-                                <label>System</label>
-                                <!-- Input -->
-                                <input id="newConnectionSystem" type="text" class="form-control" placeholder="System">
-                            </div>
-                            <!-- System Name -->
-                            <div class="form-group">
-                                <!-- Label -->
-                                <label>Username</label>
-                                <!-- Input -->
-                                <input id="newConnectionUsername" type="text" class="form-control" placeholder="Username">
-                            </div>
-
-                            <div class="row">
-                            <div class="col mr--3">
-
-                                    <!-- Caption -->
-                                    <label>
-                                        Make default connection :
-                                    </label>
-
-                                </div>
-                                <div class="col-auto">
-
-                                    <!-- Toggle -->
-                                    <div class="custom-control custom-checkbox-toggle">
-                                        <input type="checkbox" class="custom-control-input" id="defaultConnection"
-                                            checked>
-                                        <label class="custom-control-label" for="defaultConnection"></label>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addNewConnection.call(this);">
-                            Add </button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal"> Cancel </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    <!-- Alert -->
-    <!-- <div id="ScriptExecutionAlert" class="alert alert-info alert-dismissible fade show" role="alert">
-        Executing script
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div> -->
 
     <!-- #endregion -->
 
@@ -971,7 +907,7 @@
 
                         <!-- Menu -->
                         <div class="dropdown-menu" aria-labelledby="sidebarIconCopy">
-                            <a href="profile.html" class="dropdown-item">Profile</a>
+                            <a href="profile-posts.html" class="dropdown-item">Profile</a>
                             <a href="settings.html" class="dropdown-item">Settings</a>
                             <hr class="dropdown-divider">
                             <a href="sign-in.html" class="dropdown-item">Logout</a>
@@ -1342,7 +1278,8 @@
                                             <!-- Content -->
                                             <div class="small text-muted">
                                                 <strong class="text-body">Adolfo Hess</strong> commented <blockquote
-                                                    class="text-body">“I don’t think this really makes sense to do
+                                                    class="text-body">“I don’t
+                                                    think this really makes sense to do
                                                     without approval from Johnathan since he’s the one...” </blockquote>
                                             </div>
 
@@ -1463,7 +1400,8 @@
                                             <!-- Content -->
                                             <div class="small text-muted">
                                                 <strong class="text-body">Glen Rouse</strong> commented <blockquote
-                                                    class="text-body">“I don’t think this really makes sense to do
+                                                    class="text-body">“I don’t
+                                                    think this really makes sense to do
                                                     without approval from Johnathan since he’s the one...” </blockquote>
                                             </div>
 
@@ -2236,7 +2174,8 @@
                                                 <!-- Content -->
                                                 <div class="small text-muted">
                                                     <strong class="text-body">Glen Rouse</strong> commented <blockquote
-                                                        class="text-body">“I don’t think this really makes sense to do
+                                                        class="text-body">“I
+                                                        don’t think this really makes sense to do
                                                         without approval from Johnathan since he’s the one...”
                                                     </blockquote>
                                                 </div>
@@ -2314,291 +2253,255 @@
 
         <!-- HEADER -->
         <div class="header bg-dark pb-5">
+            <!-- Image -->
+            <img src="assets/img/covers/profile-cover-1.jpg" class="header-img-top" alt="...">
+
             <div class="container-fluid">
 
                 <!-- Body -->
-                <div class="header-body">
+                <div class="header-body mt--5 mt-md--6">
                     <div class="row align-items-end">
-                        <div class="col">
+                        <div class="col-auto">
+
+                            <!-- Avatar -->
+                            <div class="avatar avatar-xxl header-avatar-top">
+                                <img src="assets/img/avatars/profiles/avatar-1.jpg" alt="..." class="avatar-img rounded-circle border border-4 border-body">
+                            </div>
+
+                        </div>
+                        <div class="col mb-3 ml--3 ml-md--2">
 
                             <!-- Pretitle -->
-                            <h6 class="header-pretitle text-secondary">
-                                Script Execution
+                            <h6 id="profileNickname" class="header-pretitle">
+                                Members
                             </h6>
 
                             <!-- Title -->
-                            <h1 id="script-title" class="header-title text-white">
-                                Script Name
+                            <h1 id="profileName" class="header-title">
+                                Ofir Levi
                             </h1>
 
                         </div>
+                        <!-- <div class="col-12 col-md-auto mt-2 mt-md-0 mb-md-3">
+
+              <a href="#!" class="btn btn-primary d-block d-md-inline-block">
+                Subscribe
+              </a>
+
+            </div> -->
                     </div> <!-- / .row -->
+                    <div class="row align-items-center">
+                        <div id="profileHeaderNavigation" class="col">
+
+                            <!-- Nav -->
+                            <!-- <ul class="nav nav-tabs nav-overflow header-tabs">
+                                <li class="nav-item">
+                                    <a href="profile.html" class="nav-link">
+                                        Profile
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="under-construction.html" class="nav-link">
+                                        Defaults
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="history.html" class="nav-link active">
+                                        Execution History
+                                    </a>
+                                </li>
+                            </ul> -->
+
+                        </div>
+                    </div>
                 </div> <!-- / .header-body -->
-
-                <!-- Footer -->
-                <div id="script-desc" class="header-footer">
-
-                    Script Description
-
-                </div>
 
             </div>
         </div> <!-- / .header -->
 
         <!-- CARDS -->
-        <div class="container-fluid mt--6">
-            <div class="row justify-content-around">
-                <div class="h-100 col-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="row align-items-center">
-                                <div class="col">
-
-                                    <!-- Title -->
-                                    <h4 class="card-header-title">
-                                        Logon Data
-                                    </h4>
-
-                                </div>
-                                <div class="col-auto mr--3">
-
-                                    <!-- Caption -->
-                                    <span class="text-muted">
-                                        New Session :
-                                    </span>
-
-                                </div>
-                                <div class="col-auto">
-
-                                    <!-- Toggle -->
-                                    <div class="custom-control custom-checkbox-toggle">
-                                        <input type="checkbox" class="custom-control-input" id="logonDataToggle"
-                                            checked>
-                                        <label class="custom-control-label" for="logonDataToggle" data-toggle="collapse"
-                                            data-target="#logonDataCardBody" aria-expanded="true" aria-controls="logonDataCardBody"></label>
-                                    </div>
-
-                                </div>
-                            </div> <!-- / .row -->
-                        </div>
-                        <div id="logonDataCardBody" class="card-body collapse show">
-
-                            <p class="card-title text-muted text-left">
-                                Log in to which system using what user
-                            </p>
-
-                            <!-- Form -->
-                            <form class="card-text">
-
-                                <div class="row align-items-center">
-                                    <label class="col-auto">
-                                        Predefined connections :
-                                    </label>
-                                    <div class="col">
-                                        <select id="predefinedConnectionsSelect" class="form-control" data-toggle="select"
-                                            onchange="logonDataChanged.call(this);">
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <!-- System Name -->
-                                <div class="form-group">
-                                    <!-- Label -->
-                                    <label>System</label>
-                                    <!-- Input -->
-                                    <input id="logonDataSystem" type="text" class="form-control" placeholder="System">
-                                </div>
-                                <!-- System Name -->
-                                <div class="form-group">
-                                    <!-- Label -->
-                                    <label>Username</label>
-                                    <!-- Input -->
-                                    <input id="logonDataUsername" type="text" class="form-control" placeholder="Username">
-                                </div>
-
-                                <div class="row justify-content-end pr-3">
-                                    <button type="button" class="btn btn-primary" onclick="openNewConnectionModal.call(this);"> Add as new connection </button>
-                                </div>
-
-                            </form>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="h-100 col-4">
-                    <div class="card">
-                        <div class="card-header">
-                            <!-- <div class="row align-items-center"> -->
-                            <!-- <div class="col"> -->
-
-                            <!-- Title -->
-                            <h4 class="card-header-title">
-                                Execution Details
-                            </h4>
-
-                            <!-- </div>     -->
-                            <!-- </div> / .row -->
-                        </div>
-                        <div id="ExecutionDetailsCardBody" class="card-body">
-
-                            <!-- Form -->
-                            <form class="card-text">
-
-                                <button type="button" class="btn btn-primary" onclick="executeScript();"> Execute
-                                </button>
-                                <button type="button" class="btn btn-primary" onclick="saveForLater();"> Save for later
-                                </button>
-
-                            </form>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <!-- Input -->
-                <div data-toggle="lists" class="card">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col">
-                                <div class="row align-items-center col-auto">
-                                    <!-- Title -->
-                                    <h4 class="card-header-title col-auto">
-                                        Input Data
-
-                                    </h4>
-
-                                    <div class="col ml-0 pl-3 input-group input-group-flush input-group-merge">
-                                        <input type="search" class="form-control form-control-flush form-control-prepended"
-                                            placeholder="Search" oninput="searchInputList.call(this);">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <span class="fe fe-search"></span>
-                                            </div>
-                                        </div>
-                                        <div class="input-group-append pointer" onclick="clearInputTableSearch.call(this);">
-                                            <div class="input-group-text">
-                                                <span class="fe fe-delete"> </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+        <div class="container-fluid mt--6 pt-4">
+            <div id="historyTableContainer" class="collapse show">
+                <div class="row align-items-center ml-4 mr-4">
+                    <div class="col ml-0 pl-0 input-group input-group-flush input-group-merge">
+                        <input type="search" class="form-control form-control-flush form-control-prepended" placeholder="Search"
+                            oninput="searchHistoryList.call(this);">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="fe fe-search"></span>
                             </div>
-                            <div class="col-auto">
-                                <div class="row">
-
-                                    <div id="filterStatusOptions" class="btn-group btn-group-toggle collapse"
-                                        data-toggle="buttons">
-                                        <label class="btn btn-sm btn-white" data-filtercolumn="status" for="filterStatusSuccess"
-                                            data-filtervalue="Success" onclick="filterInputTable.call(this);">
-                                            <input id="filterStatusSuccess" type="checkbox">
-                                            Success
-                                        </label>
-                                        <label class="btn btn-sm btn-white" data-filtercolumn="status" data-filtervalue="Pending"
-                                            onclick="filterInputTable.call(this);">
-                                            Pending
-                                        </label>
-                                        <label class="btn btn-sm btn-white" data-filtercolumn="status,status" data-filtervalue="Error,Execution Error"
-                                            onclick="filterInputTable.call(this);">
-                                            Error
-                                        </label>
-                                    </div>
-
-                                    <span id="filterOptionsToggle" class="ml-1" data-toggle="collapse" data-target="#filterStatusOptions"
-                                        aria-controls="filterStatusOptions" aria-expanded="false">
-                                        <button type="button" class="btn btn-sm btn-white" data-toggle="button"
-                                            aria-pressed="false" autocomplete="off">
-                                            Filter Status Options
-                                        </button>
-                                    </span>
-
-                                    <button type="button" class="btn btn-sm btn-white ml-2" data-target="#inputDataTableContainer"
-                                        onclick="addNewRowClick.call(this);">
-                                        New Line
-                                    </button>
-
-                                    <div class="btn-group ml-2">
-                                        <button type="button" class="btn btn-sm btn-white">Import</button>
-                                        <button type="button" class="btn btn-sm btn-white dropdown-toggle dropdown-toggle-split"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="#!" onclick="copyDataFromClipboard.call(this);">Import From Clipboard</a>
-                                            <a class="dropdown-item" href="#!">Import From Local File</a>
-                                        </div>
-                                    </div>
-
-                                    <div class="dropdown ml-2">
-                                        <a href="#!" class="dropdown-ellipses dropdown-toggle" role="button"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fe fe-more-vertical"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right">
-                                            <a href="#!" class="dropdown-item">
-                                                Export
-                                            </a>
-                                            <span class="dropdown-item dropright">
-                                                <a class="dropdown-item pl-0 pt-0 dropdown-toggle" href="#!" id="dropdownSubmenuButton"
-                                                    data-toggle="dropdown"> Clear Data </a>
-                                                <div class="dropdown-menu" aria-labelledby="dropdownSubmenuButton">
-                                                    <a class="dropdown-item" href="#!" onclick="clearInputData();">All</a>
-                                                    <a class="dropdown-item" href="#!" onclick="removeSuccessFromInputList();">Only
-                                                        Success</a>
-                                                </div>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
+                        </div>
+                        <div class="input-group-append pointer" onclick="clearHistorySearch.call(this);">
+                            <div class="input-group-text">
+                                <span class="fe fe-delete"> </span>
                             </div>
-                        </div> <!-- / .row -->
+                        </div>
                     </div>
-                    <div id="inputDataTableContainer" class="table-responsive mb-0">
-                        <table class="table table-nowrap card-table table-hover2">
-                            <thead>
-                                <tr>
-                                    <!-- <th class="col-2">
-                                        <a href="#" class="text-muted sort" data-sort="card-name">
-                                            Card Name
-                                        </a>
-                                    </th>
-                                    <th class="col-1">
-                                        <a href="#" class="text-muted sort" data-sort="username">
-                                            Username
-                                        </a>
-                                    </th> -->
-                                    <th class="col-1">
-                                        <a href="#!" class="text-muted sort" data-sort="status" onclick="updateSorting.call(this);">
-                                            Status
-                                        </a>
-                                    </th>
-                                    <th class="col-1 text-center">
-                                        Actions
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="list">
-                                <!-- <tr>
-                                    <td>
-                                        <input type="text" class="form-control form-control-flush h-100 card-name" placeholder="Card name">
-                                    </td>
-                                    <td>
-                                        <input type="text" class="form-control form-control-flush h-100 username" placeholder="Username">
-                                    </td>
-                                    <td>
-                                        <span class="text-warning">●</span> <span class="status"> Warning </span>
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="fe fe-trash-2 mr-1" onclick="deleteRowClick.call(this)"> </span>
-                                        <span class="fe fe-copy" onclick="copyRowClick.call(this)"> </span>
-                                    </td>
-                                </tr> -->
-                            </tbody>
-                        </table>
+
+                    <div class=" align-items-center">
+                        <label for="filterScriptsOptions">
+                            Scripts Filter :
+                        </label>
                     </div>
-                </div> <!-- / .row -->
+
+                    <div class="col-3">
+                        <div id="filterScriptsOptions" class="btn-group btn-group-toggle col" data-toggle="buttons">
+                            <select id="filterScriptsOptionsSelect" class="form-control" data-toggle="select"
+                                data-filtercolumn="scriptid" multiple onchange="filterHistoryTable.call(this);">
+                                <!-- <option value="0">Script 0</option>
+                                <option value="1">Script 1</option> -->
+                            </select>
+                        </div>
+
+                        <!-- <span id="filterScriptsToggle" class="ml-1" data-toggle="collapse" data-target="#filterScriptsOptions"
+                            aria-controls="filterScriptsOptions" aria-expanded="false">
+                            <button type="button" class="btn btn-sm btn-white" data-toggle="button"
+                                aria-pressed="false" autocomplete="off">
+                                Filter Status Options
+                            </button>
+                        </span> -->
+                    </div>
+
+                </div>
+                <table class="table table-nowrap card-table table-hover2">
+                    <thead>
+                        <tr>
+                            <th class="col-auto">
+                                <a href="#" class="text-muted sort" data-sort="script">
+                                    Script
+                                </a>
+                            </th>
+                            <th class="col-2">
+                                <a href="#" class="text-muted sort" data-sort="timestamp">
+                                    Timestamp
+                                </a>
+                            </th>
+                            <th class="col-auto">
+                                <a href="#" class="text-muted sort" data-sort="ran_by">
+                                    Ran By
+                                </a>
+                            </th>
+                            <th class="col-2">
+                                <a href="#!" class="text-muted sort" data-sort="result">
+                                    Result
+                                </a>
+                            </th>
+                            <!-- <th class="col-1 text-center">
+                                Actions
+                            </th> -->
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        <tr class="pointer" data-id="0" data-scriptId="0" onclick="expandHistory.call(this);">
+                            <td>
+                                <span class="script">
+
+                                </span>
+                            </td>
+                            <td>
+                                <span class="timestamp">
+
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ran_by">
+
+                                </span>
+                            </td>
+                            <td class="result">
+
+                            </td>
+                            <!-- <td class="text-center">
+                                <span class="fe fe-file-text" onclick="expandHistory.call(this);"> </span>
+                            </td> -->
+                        </tr>
+                    </tbody>
+                </table>
             </div>
 
+            <!-- history entry result table -->
+            <div id="historyEntryTableContainer" class="collapse">
+                <button type="button" role="button" class="btn btn-sm btn-white" onclick="historyBack();"> Back </button>
+
+                <div class="row align-items-center ml-4 mr-4">
+                    <div class="col ml-0 pl-0 input-group input-group-flush input-group-merge">
+                        <input type="search" class="form-control form-control-flush form-control-prepended" placeholder="Search"
+                            oninput="searchHistoryEntryList.call(this);">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="fe fe-search"></span>
+                            </div>
+                        </div>
+                        <div class="input-group-append pointer" onclick="clearHistoryEntrySearch.call(this);">
+                            <div class="input-group-text">
+                                <span class="fe fe-delete"> </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <table class="table table-nowrap card-table table-hover2">
+                    <thead>
+                        <tr>
+                            <!-- <th class="col-2">
+                                <a href="#" class="text-muted sort" data-sort="script">
+                                    Script
+                                </a>
+                            </th>
+                            <th class="col-2">
+                                <a href="#" class="text-muted sort" data-sort="date">
+                                    Date
+                                </a>
+                            </th>
+                            <th class="col-1">
+                                <a href="#" class="text-muted sort" data-sort="ran_by">
+                                    Ran By
+                                </a>
+                            </th>
+                            <th class="col-1">
+                                <a href="#!" class="text-muted sort" data-sort="result">
+                                    Result
+                                </a>
+                            </th> -->
+                            <th class="col-1">
+                                <a href="#!" class="text-muted sort" data-sort="status" onclick="updateSorting.call(this);">
+                                    Status
+                                </a>
+                            </th>
+                            <!-- <th class="col-auto">
+                                <a href="#!" class="text-muted sort" data-sort="description">
+                                    Description
+                                </a>
+                            </th> -->
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        <tr class="pointer" data-id="0" data-script-id="0" onclick="expandHistory.call(this);">
+                            <td>
+                                <span class="script">
+
+                                </span>
+                            </td>
+                            <td>
+                                <span class="date">
+
+                                </span>
+                            </td>
+                            <td>
+                                <span class="ran_by">
+
+                                </span>
+                            </td>
+                            <td class="result">
+
+                            </td>
+                            <!-- <td class="text-center">
+                                    <span class="fe fe-file-text" onclick="expandHistory.call(this);"> </span>
+                                </td> -->
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div> <!-- / .main-content -->
 
         <!-- JAVASCRIPT
@@ -2622,17 +2525,17 @@
         <Script type="text/javascript">
             function init() {
                 updateCurrentProfile();
-                updateSelectedScript();
-                changeTitles();
+                setProfileHeaderNavigation(2);
+                // updateSelectedScript();
+                // changeTitles();
                 loadMenusFromFile();
-                inputList = createInputDataTable();
-                updateTooltips();
-                updatePredefinedConnections();
+                // createInputDataTable();
+                // updateTooltips();
+                loadHistory();
+                updateHistoryScriptDropdown();
             }
         </Script>
 
-        <script type="text/javascript" src="assets/js/list.helper.js""></script>
-        
         <script type="text/javascript" src="assets/js/test.data.js"></script>
         <!-- Data Handler -->
         <script type="text/javascript" src="assets/js/data.handler.js" onload="init()"></script>

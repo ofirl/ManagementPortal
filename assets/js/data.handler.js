@@ -50,7 +50,7 @@ var executionResult = {
 };
 
 // Profile data
-var currentProfile = userProfiles[0];
+var currentProfile;
 
 /* Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions -- Helper Functions */
 /* #region Helper Functions */
@@ -83,6 +83,21 @@ function isElement(o) {
         typeof HTMLElement === "object" ? o instanceof HTMLElement : //DOM2
             o && typeof o === "object" && o !== null && o.nodeType === 1 && typeof o.nodeName === "string"
     );
+}
+
+// if (userProfiles) {
+//     userProfiles.forEach((p) => p.fullName = function () {
+//         return this.personal.first_name + ' ' + this.personal.last_name;
+//     });
+// }
+
+function searchList(list, value, isNotFuzzy) {
+    isNotFuzzy = isNotFuzzy || false;
+    currentSearch = value;
+    if (isNotFuzzy)
+        list.search(value)
+    else
+        list.fuzzySearch(value);
 }
 
 /* #endregion */
@@ -184,7 +199,14 @@ function loadMenusFromFile() {
 /* Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data -- Input Data */
 /* #region Input Data */
 
-function createInputDataTable(tableContainer) {
+function createInputDataTable(list, tableContainer, noActions, isLabel, additionalColumns) {
+    if (list == undefined && list != null) {
+        inputList = null;
+        return createInputDataTable(inputList, tableContainer, noActions);
+    }
+    noActions = noActions || false;
+    isLabel = isLabel || false;
+
     if (!tableContainer)
         tableContainer = document.querySelector('#' + inputDataTableContainer);
 
@@ -199,7 +221,7 @@ function createInputDataTable(tableContainer) {
     // table header cells
     let totalWidth = 2;
     let headerRow = tableContainer.querySelector('thead tr');
-    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
+    scriptsArray[selectedScriptIndex].inputs.concat(additionalColumns).forEach(input => {
         let headerCell = document.createElement('th');
         headerCell.addClass('col-' + input.width);
         totalWidth += input.width;
@@ -218,39 +240,64 @@ function createInputDataTable(tableContainer) {
         // headerCell.append(headerCellLink);
         headerRow.insertBefore(headerCell, headerRow.querySelector('[data-sort=status]').parentElement);
 
-        let inputOption = {
-            name: input.name.replace(' ', '-'),
-            attr: 'value'
-        };
+        let inputOption;
+        if (!isLabel) {
+            inputOption = {
+                name: input.name.replace(' ', '-'),
+                attr: 'value'
+            };
+        }
+        else {
+            inputOption = input.name.replace(' ', '-');
+        }
+
         inputListOptions.valueNames.push(inputOption);
     });
 
     // total card width
-    tableContainer.parentElement.addClass('col-' + totalWidth);
+    // tableContainer.parentElement.addClass('col-' + totalWidth);
 
     // add one new empty row
-    addNewRow(document.querySelector('#' + inputDataTableContainer));
+    addNewRow(null, tableContainer, noActions, isLabel, additionalColumns);
 
     // Init list
-    inputList = new List(inputDataTableContainer, inputListOptions);
-    inputList.remove('id', 0);
-    addNewRow(document.querySelector('#' + inputDataTableContainer));
+    list = new List(tableContainer.id, inputListOptions);
+    list.clear();
+    // addNewRow(list, tableContainer, noActions);
 
-    applySorting(inputList, currentSort = { column: inputList.valueNames[2].name, order: 'asc' });
+    // applySorting(list, currentSort = { column: list.valueNames[2].name, order: 'asc' });
+
+    return list;
 }
 
 function addNewRowClick() {
-    addNewRow(document.querySelector(this.dataset.target));
+    addNewRow(inputList, document.querySelector(this.dataset.target));
 }
 
-function addNewRow(table) {
-    if (inputList) {
-        inputList.add({
-            'card-name': '',
-            'username': '',
-            'status': 'Error',
-            'id': getNextInputListItemId()
-        });
+function addNewRow(list, table, noActions, isLabel, additionalColumns) {
+    if (list == undefined)
+        list = inputList;
+
+    isLabel = isLabel || false;
+    additionalColumns = additionalColumns || [];
+    noActions = noActions || false;
+
+    if (list) {
+        // console.log(list);
+        let listItem = list.valueNames.reduce(function (acc, cur) {
+            if (cur.data)
+                acc[cur.data[0]] = '';
+            else if (cur.name)
+                acc[cur.name] = '';
+            else
+                acc[cur] = '';
+
+            return acc;
+        }, {});
+        
+        listItem.id = getNextInputListItemId();
+
+        list.add(listItem);
         $(table.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
         updateStatus(table.querySelector('tbody').lastElementChild);
         return;
@@ -261,24 +308,34 @@ function addNewRow(table) {
     let rowId = getNextInputListItemId();
     row.setAttribute('data-id', rowId);
     row.setAttribute('id', rowId);
-    scriptsArray[selectedScriptIndex].inputs.forEach(input => {
+    scriptsArray[selectedScriptIndex].inputs.concat(additionalColumns).forEach(input => {
         let cellClass = input.name.replace(' ', '-');
         let cellInputType = input.type;
         let cellPlaceHolder = input.name;
 
-        row.innerHTML += '<td>' +
-            '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 bw-flush-1 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' +
-            'oninput="inputDataChanged.call(this);"> </td>';
-
+        if (!isLabel) {
+            row.innerHTML += '<td>' +
+                '<input type="' + cellInputType + '" class="form-control form-control-flush h-100 bw-flush-1 ' + cellClass + '" placeholder="' + cellPlaceHolder + '" value=""' +
+                'oninput="inputDataChanged.call(this);"> </td>';
+        }
+        else {
+            row.innerHTML += `<td> <span class="${cellClass}"> </span> </td>`;
+        }
         inputListItem[input.name.replace(' ', '-')] = '';
     });
 
     row.innerHTML += '<td> <span data-role="icon" class="text-warning">●</span> <span class="status"' +
-        'data-toggle="tooltip" data-html="true" title=""> Pending </span> </td>' +
-        '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"' +
-        'data-toggle="tooltip" data-placement="top" data-html="true" title="Delete row"> </span>' +
-        '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)" data-toggle="tooltip"' +
-        'data-placement="top" data-html="true" title="Copy row"> </span> </td> </tr>';
+        'data-toggle="tooltip" data-html="true" title=""> Pending </span> </td>';
+
+    if (!noActions) {
+        row.innerHTML +=
+            '<td class="text-center"> <span class="fe fe-trash-2 mr-1 pointer" onclick="deleteRowClick.call(this)"' +
+            'data-toggle="tooltip" data-placement="top" data-html="true" title="Delete row"> </span>' +
+            '<span class="fe fe-copy pointer" onclick="copyRowClick.call(this)" data-toggle="tooltip"' +
+            'data-placement="top" data-html="true" title="Copy row"> </span> </td>';
+    }
+
+    row.innerHTML += '</tr>';
 
     inputListItem['status'] = 'Warning';
 
@@ -376,7 +433,7 @@ function applySorting(list, sort) {
 
 function updateStatus(row) {
     let tooltipTitle = [];
-    let statusCell = row.lastElementChild.previousElementSibling;
+    let statusCell = row.querySelector('.status').parentElement;
     let statusText = statusCell.querySelector('.status');
     let statusIcon = statusCell.querySelector('[data-role="icon"]');
     let error = false;
@@ -437,16 +494,16 @@ function filterInputTable(refreshFilter) {
         let filterColumnArray = this.dataset['filtercolumn'].split(',');
         let filterValueArray = this.dataset['filtervalue'].split(',');
 
-        filterColumnArray.forEach( function (f, idx) {
+        filterColumnArray.forEach(function (f, idx) {
             let filterColumn = f;
             let filterValue = filterValueArray[idx];
 
             if (filterValue != '' || filterColumn != '') {
                 let filterObject = {
-                    column : filterColumn,
+                    column: filterColumn,
                     value: filterValue
                 };
-                let foundItemIndex = currentFilter.findIndex( (v, i) => v.column == filterColumn && v.value == filterValue );
+                let foundItemIndex = currentFilter.findIndex((v, i) => v.column == filterColumn && v.value == filterValue);
                 if (foundItemIndex != -1) {
                     currentFilter.splice(foundItemIndex, 1);
                 }
@@ -457,7 +514,7 @@ function filterInputTable(refreshFilter) {
             else {
                 currentFilter = [];
             }
-        } );
+        });
     }
 
     if (currentFilter.length == 0) {
@@ -465,16 +522,16 @@ function filterInputTable(refreshFilter) {
         return;
     }
 
-    inputList.filter(function(item) {
+    inputList.filter(function (item) {
         let itemResult = false;
-        return currentFilter.reduce( function (acc, curr, idx, src) {
+        return currentFilter.reduce(function (acc, curr, idx, src) {
             return acc || item._values[curr.column].localeCompare(curr.value) == 0;
         }, false);
     });
 }
 
 function clearInputTableFilter() {
-    document.querySelectorAll('#filterStatusOptions label').forEach( (e) => e.removeClass('active') );
+    document.querySelectorAll('#filterStatusOptions label').forEach((e) => e.removeClass('active'));
     currentFilter = [];
     filterInputTable(true);
 }
@@ -548,13 +605,13 @@ function executeScript(forceRun) {
     }
 
     alert('run script here');
-    
+
     // $('#ScriptExecutionAlert').alert();
 
     clearInputTableFilter();
 
     let statusCells = document.querySelector('#' + inputDataTableContainer).querySelectorAll('.status');
-    statusCells.forEach( function (e) {
+    statusCells.forEach(function (e) {
         e.previousElementSibling.addClass('is-loading').addClass('pr-4');
         e.innerText = 'Executing';
     });
@@ -562,9 +619,9 @@ function executeScript(forceRun) {
     // statusCells.forEach( (e) => e.previousElementSibling.addClass('is-loading').addClass('pr-4') );
     // statusCells.forEach( (e) => e.innerText = 'Executing' );
 
-    document.querySelectorAll('[data-role="erorr_description"').forEach( (e) => e.parentElement.removeChild(e) );
+    document.querySelectorAll('[data-role="erorr_description"').forEach((e) => e.parentElement.removeChild(e));
 
-    inputList.items.forEach( (item) => item._values['status'] = 'Executing' );
+    inputList.items.forEach((item) => item._values['status'] = 'Executing');
 
     document.querySelector('#filterOptionsToggle').children[0].setAttribute('disabled', '');
     $('#filterStatusOptions').collapse('hide');
@@ -618,7 +675,7 @@ function executionResultLoaded() {
 
     isExecuting = false;
 
-    document.querySelectorAll('#' + inputDataTableContainer + ' .is-loading').forEach( (e) => e.removeClass('is-loading').removeClass('pr-4') );
+    document.querySelectorAll('#' + inputDataTableContainer + ' .is-loading').forEach((e) => e.removeClass('is-loading').removeClass('pr-4'));
     document.querySelector('#filterOptionsToggle').children[0].removeAttribute('disabled', '');
 
     executionResult.results.forEach(item => {
@@ -633,7 +690,7 @@ function executionResultLoaded() {
         let statusIcon = statusText.previousElementSibling;
         statusIcon.className = item.success ? 'text-success' : 'text-danger';
 
-        
+
         if (item.desc != undefined && item.desc != null && item.desc != '') {
             let statusCell = statusText.parentElement;
             // let previousError = statusCell.querySelector('[data-role="erorr_description"');
@@ -652,10 +709,223 @@ function executionResultLoaded() {
 /* #endregion */
 /* Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute -- Execute */
 
+/* History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History */
+/* #region History */
+
+var historyList;
+var historyOptions;
+
+var historyEntryResultList;
+
+function expandHistory() {
+    // TODO
+    // console.log('expand history ' + this.dataset.id);
+    selectedScriptIndex = this.dataset['scriptid'];
+    // console.log(selectedScriptIndex);
+    currentScript = scriptsArray[selectedScriptIndex];
+
+    document.querySelector('#historyEntryTableContainer').querySelector('tbody').innerHTML = '';
+
+    historyEntryResultList = null;
+    historyEntryResultList = createInputDataTable(historyEntryResultList, document.querySelector('#historyEntryTableContainer'), true, true, [{name: 'description', width: 2}]);
+
+    loadHistoryEntryResults(this.dataset.id);
+    toggleHistoryTables();
+}
+
+function historyBack() {
+    let historyEntryTable = document.querySelector('#historyEntryTableContainer').querySelector('table');
+    let historyEntryTableHeaderRow = historyEntryTable.querySelector('table thead tr');
+    while (historyEntryTableHeaderRow.children.length > 1) {
+        historyEntryTableHeaderRow.removeChild(historyEntryTableHeaderRow.firstElementChild);
+    }
+
+    toggleHistoryTables();
+}
+
+function toggleHistoryTables() {
+    loadHistoryEntryResults();
+
+    $('#historyEntryTableContainer').collapse('toggle');
+    $('#historyTableContainer').collapse('toggle');
+}
+
+function loadHistoryEntryResults(entryId) {
+    if (entryId == undefined || entryId == null)
+        return;
+    
+    let entry = executionHistory.find( (e) => e.id == entryId);
+    entry.inputs.forEach( function (i) {
+        let historyResultEntry = Object.keys(i).reduce( function (acc, key) {
+            acc[key] = i[key];
+            return acc;
+        }, {});
+        historyResultEntry.status = entry.results.find((r) => r.id == i.id).success ? 'Success' : 'Error';
+        historyResultEntry.description = entry.results.find((r) => r.id == i.id).desc;
+
+        historyEntryResultList.add(historyResultEntry);
+    });
+
+    historyEntryResultList.listContainer.querySelectorAll('.status').forEach( function (e) {
+        e.previousElementSibling.className = e.innerHTML == 'Error' ? 'text-danger' : 'text-success';
+    });
+}
+
+function loadHistory() {
+    let historyTableContainer = document.querySelector('#historyTableContainer');
+    historyOptions = {
+        valueNames: [
+            // { data: ['id'] },
+            { data: ['id', 'scriptid'] },
+            // { data: ['script-id'] },
+            'script',
+            'timestamp',
+            'ran_by',
+            'result'
+        ]
+    };
+
+    historyList = new List('historyTableContainer', historyOptions);
+    historyList.clear();
+    executionHistory.forEach(function (i) {
+        let resultSuccess = i.results.filter( (item) => item.success).length;
+        let resultPercentage = resultSuccess / i.results.length * 100;
+        let historyEntry = {
+            'id': i.id,
+            'scriptid': i.script,
+            'script': scriptsArray[i.script].name,
+            'timestamp': `${i.timestamp.day}/${i.timestamp.month}/${i.timestamp.year} ${i.timestamp.hour}:${i.timestamp.minute}`,
+            'ran_by': userProfiles[i.ran_by].fullName(),
+            'result': `${resultSuccess}/${i.results.length} (${resultPercentage}%)`
+        };
+
+        historyList.add(historyEntry);
+    });
+}
+
+function searchHistoryList() {
+    searchList(historyList, this.value);
+}
+
+function clearHistorySearch() {
+    let historySearch = this.parentElement.querySelector('input').value = '';
+    searchHistoryList.call(historySearch);
+}
+
+function filterHistoryTable(refreshFilter) {
+    refreshFilter = refreshFilter || false;
+
+    if (!refreshFilter) {
+        let filterColumnArray = this.dataset['filtercolumn'].split(',');
+        // let filterValueArray = this.dataset['filtervalue'].split(',');
+        let filterValueArray = $(this).val();
+
+        if (filterValueArray.length != 0) {
+            filterColumnArray.forEach(function (f, idx) {
+                let filterColumn = f;
+                let filterValue = filterValueArray[idx];
+
+                if (filterValue != '' || filterColumn != '') {
+                    console.log(filterValue);
+                    let filterObject = {
+                        column: filterColumn,
+                        value: filterValue
+                    };
+                    let foundItemIndex = currentFilter.findIndex((v, i) => v.column == filterColumn && v.value == filterValue);
+                    if (foundItemIndex != -1) {
+                        currentFilter.splice(foundItemIndex, 1);
+                    }
+                    else {
+                        currentFilter.push(filterObject);
+                    }
+                }
+                else {
+                    currentFilter = [];
+                }
+            });
+        }
+        else {
+            currentFilter = [];
+        }
+    }
+
+    console.log(currentFilter);
+
+    if (currentFilter.length == 0) {
+        historyList.filter();
+        return;
+    }
+
+    historyList.filter(function (item) {
+        let itemResult = false;
+        return currentFilter.reduce(function (acc, curr, idx, src) {
+            return acc || item._values[curr.column] == curr.value;
+        }, false);
+    });
+}
+
+function updateHistoryScriptDropdown() {
+    let scriptSelect = document.querySelector('#filterScriptsOptionsSelect');
+    scriptsArray.forEach( function (s) {
+        let option = document.createElement('option');
+        option.setAttribute('value', s.id);
+        option.innerHTML = s.name;
+        scriptSelect.append(option);
+    });
+}
+
+function searchHistoryEntryList() {
+    searchList(historyEntryResultList, this.value);
+}
+
+function clearHistoryEntrySearch() {
+    let historySearch = this.parentElement.querySelector('input').value = '';
+    searchHistoryEntryList.call(historySearch);
+}
+
+/* #endregion */
+/* History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History -- History */
+
+/* Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile */
+/* #region Profile */
+
+function updateProfileName() {
+    let profileNickname = document.querySelector('#profileNickname');
+    if (profileNickname)
+        profileNickname.innerHTML = currentProfile.nickname;
+
+    let profileName = document.querySelector('#profileName');    
+    if (profileName)
+        profileName.innerHTML = currentProfile.fullName();
+}
+
+function setProfileHeaderNavigation(activeIndex) {
+    let profileNavigationContainer = document.querySelector('#profileHeaderNavigation');
+    profileNavigationContainer.innerHTML += '<ul class="nav nav-tabs nav-overflow header-tabs">' +
+        '<li class="nav-item"> <a href="profile.html" class="nav-link"> Profile </a> </li>' +
+        '<li class="nav-item"> <a href="under-construction.html" class="nav-link"> Defaults </a> </li>' +
+        '<li class="nav-item"> <a href="history.html" class="nav-link"> Execution History </a> </li>' +
+        '</ul>';
+    
+        profileNavigationContainer.querySelector('ul').children[activeIndex].children[0].addClass('active');
+}
+
+/* #endregion */
+/* Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile -- Profile */
+
 /* Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init -- Init */
 
 function updateSelectedScript() {
-    currentScript = scriptsArray[selectedScriptIndex];
+    let url_string = window.location.href;
+    let url = new URL(url_string);
+    let scriptId = url.searchParams.get('script-id');
+
+    currentScript = scriptsArray[scriptId];
+}
+
+function updateCurrentProfile() {
+    currentProfile = userProfiles[0];
+    updateProfileName();
 }
 
 function updateTooltips() {
@@ -665,14 +935,14 @@ function updateTooltips() {
 function updatePredefinedConnections() {
     let selectElement = document.querySelector('#predefinedConnectionsSelect');
 
-    currentProfile.defaults.logon.forEach( function (e, idx) {
+    currentProfile.defaults.logon.forEach(function (e, idx) {
         let option = document.createElement('option');
         option.innerHTML = e.description;
         option.setAttribute('value', idx);
         if (e.default)
             option.setAttribute('selected', 'selected');
         selectElement.append(option);
-    } );
+    });
 
     if (selectElement.selectedIndex != '' && selectElement.selectedIndex != -1) {
         let selectedIndex = selectElement.selectedIndex;
