@@ -287,24 +287,29 @@ function addNewRow(table) {
 }
 
 function copyRowClick() {
-    copyRow(this.parentElement.parentElement);
+    // copyRow(this.parentElement.parentElement);
+    let item = inputList.copyItem('id', this.parentElement.parentElement.dataset.id);
+    updateStatus(item.elm);
+    $(item.elm.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
+    // applySorting(inputList);
+    inputList.applyCurrentSort();
 }
 
-function copyRow(originalRow) {
-    let newRow = {};
-    let originalItem = inputList.get('id', originalRow.dataset.id)[0]._values;
-    for (var property in originalItem) {
-        if (originalItem.hasOwnProperty(property)) {
-            newRow[property] = originalItem[property]
-        }
-    }
-    newRow.id = getNextInputListItemId();
-    inputList.add(newRow);
-    updateStatus(originalRow.parentElement.lastElementChild);
-    $(originalRow.parentElement.lastElementChild.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
+// function copyRow(originalRow) {
+//     let newRow = {};
+//     let originalItem = inputList.get('id', originalRow.dataset.id)[0]._values;
+//     for (var property in originalItem) {
+//         if (originalItem.hasOwnProperty(property)) {
+//             newRow[property] = originalItem[property]
+//         }
+//     }
+//     newRow.id = getNextInputListItemId();
+//     inputList.add(newRow);
+//     updateStatus(originalRow.parentElement.lastElementChild);
+//     $(originalRow.parentElement.lastElementChild.querySelectorAll('[data-toggle="tooltip"]')).tooltip();
 
-    applySorting(inputList);
-}
+//     applySorting(inputList);
+// }
 
 function deleteRowClick() {
     deleteRow(this.parentElement.parentElement);
